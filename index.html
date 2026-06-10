@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abdul Hafidz - Professional Portfolio</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Font Awesome & Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300 antialiased selection:bg-indigo-500 selection:text-white">
+
+    <!-- NAVIGATION BAR -->
+    <header class="bg-white/80 dark:bg-slate-950/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-900 sticky top-0 z-50 transition-all duration-300">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" class="text-xl font-extrabold bg-gradient-to-r from-indigo-600 to-violet-600 dark:from-indigo-400 dark:to-purple-400 bg-clip-text text-transparent tracking-tight">
+                Abdul Hafidz
+            </a>
+            <nav class="hidden md:flex space-x-8 text-sm font-semibold items-center">
+                <a href="#home" class="text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-white transition-colors">Home</a>
+                <a href="#about" class="text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-white transition-colors">About</a>
+                <a href="#resume" class="text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-white transition-colors">Resume</a>
+                <a href="#portfolio" class="text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-white transition-colors">Portfolio</a>
+                <a href="#blog" class="text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-white transition-colors">Blog</a>
+                <a href="#contact" class="text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-white transition-colors">Contact</a>
+                
+                <!-- Dark Mode Toggle Button -->
+                <button id="theme-toggle" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:scale-105 active:scale-95 transition-all">
+                    <i id="theme-toggle-icon" class="fas fa-moon"></i>
+                </button>
+            </nav>
+            <div class="md:hidden flex items-center gap-4">
+                <button id="mobile-theme-toggle" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400">
+                    <i id="mobile-theme-toggle-icon" class="fas fa-moon"></i>
+                </button>
+                <i class="fas fa-bars text-xl text-slate-600 dark:text-slate-400 cursor-pointer"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO PROFILE SECTION -->
+    <section id="home" class="relative min-h-[90vh] flex items-center bg-gradient-to-tr from-indigo-50 via-white to-violet-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 border-b border-slate-200 dark:border-slate-900 overflow-hidden"> 
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(99,102,241,0.08),transparent_45%)]"></div>
+        <div class="container mx-auto px-6 relative z-10 py-12">
+            <div class="grid md:grid-cols-12 gap-12 items-center">
+                <div class="md:col-span-7 space-y-6 text-center md:text-left">
+                    <span class="inline-flex px-4 py-1.5 rounded-full bg-indigo-50 dark:bg-indigo-950/50 border border-indigo-200/50 dark:border-indigo-900/50 text-indigo-600 dark:text-indigo-400 text-sm font-semibold tracking-wide">
+                        IT Practitioner & AI Educator
+                    </span>
+                    <h1 class="text-slate-900 dark:text-white text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-none">
+                        Simplifying Technology Literacy <br class="hidden lg:block">
+                        <span class="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 dark:from-indigo-400 dark:via-purple-400 dark:to-pink-400 bg-clip-text text-transparent">for Everyone.</span>
+                    </h1>
+                    <p class="text-slate-600 dark:text-slate-400 text-lg md:text-xl font-normal max-w-2xl leading-relaxed">
+                        Hi, I am <strong>Abdul Hafidz</strong>. Senior Coach Leader with extensive experience in IT Infrastructure, Large Language Models (LLM), and mentoring robust technical data annotations.
+                    </p>
+                    <div class="pt-4 flex flex-col sm:flex-row justify-center md:justify-start gap-4">
+                        <a href="#contact" class="inline-flex items-center justify-center bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 text-white font-semibold py-3.5 px-8 rounded-xl shadow-md shadow-indigo-600/10 hover:shadow-indigo-600/20 hover:scale-[1.01] transition-all">
+                            Connect With Me
+                        </a>
+                        <a href="#portfolio" class="inline-flex items-center justify-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 font-semibold py-3.5 px-8 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
+                            View Ecosystem Projects
+                        </a>
+                    </div>
+                </div>
+                <div class="md:col-span-5 flex justify-center relative">
+                    <div class="w-72 h-72 sm:w-80 sm:h-80 md:w-96 md:h-96 relative">
+                        <div class="absolute inset-0 bg-gradient-to-tr from-indigo-500 to-purple-500 rounded-[2rem] rotate-6 opacity-10 dark:opacity-20 animate-pulse"></div>
+                        <!-- Menggunakan foto-diri-1.jpg sebagai gambar utama profil korporat -->
+                        <img src="images\foto-diri-1.jpg" alt="Abdul Hafidz" class="w-full h-full object-cover rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-2xl p-3 bg-white dark:bg-slate-900 relative z-10 transition-transform hover:scale-[1.02] duration-300">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT SECTION -->
+    <section id="about" class="py-24 bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-slate-900">
+        <div class="container mx-auto px-6 max-w-5xl">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">About Me</h2>
+                <p class="text-sm text-indigo-600 dark:text-indigo-400 font-bold tracking-wider mt-2 uppercase">Background & Drive</p>
+                <div class="h-1 w-12 bg-indigo-600 dark:bg-indigo-400 mx-auto mt-4 rounded-full"></div>
+            </div>
+            <div class="grid md:grid-cols-12 gap-12 items-center text-slate-600 dark:text-slate-400 leading-relaxed text-lg">
+                <div class="md:col-span-4 flex justify-center">
+                    <!-- Menggunakan avatar lingkaran A. Hafidz.jpg untuk section About -->
+                    <img src="images\A. Hafidz.jpg" alt="Abdul Hafidz Avatar" class="w-48 h-48 rounded-full object-cover border-4 border-slate-100 dark:border-slate-900 shadow-lg">
+                </div>
+                <div class="md:col-span-8 space-y-4">
+                    <p>
+                        I'm a passionate tech coach with an extensive track record of empowering individuals and cross-functional teams within the tech ecosystem. I specialize in mentoring learners, adopting advanced workflows, and structuring best technical deployment practices.
+                    </p>
+                    <p>
+                        Fostering a growth mindset is at the heart of what I do. I focus heavily on creating modular environments, making tech systems digestible, and guiding implementation engineering from the ground up.
+                    </p>
+                    <div class="pt-2 flex gap-4 text-2xl text-indigo-600 dark:text-indigo-400">
+                        <i class="fab fa-python" title="Python"></i>
+                        <i class="fas fa-network-wired" title="Networking"></i>
+                        <i class="fas fa-brain" title="AI Engineering"></i>
+                        <i class="fab fa-aws" title="AWS Infrastructure"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- RESUME & CERTIFICATIONS TIMELINE -->
+    <section id="resume" class="py-24 bg-slate-50 dark:bg-slate-900/40 border-b border-slate-200 dark:border-slate-900">
+        <div class="container mx-auto px-6 max-w-4xl">
+            <div class="text-center mb-20">
+                <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Professional Roadmap</h2>
+                <div class="h-1 w-12 bg-indigo-600 dark:bg-indigo-400 mx-auto mt-4 rounded-full"></div>
+            </div>
+            
+            <div class="space-y-16">
+                <!-- Experience -->
+                <div>
+                    <h3 class="text-lg font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-widest mb-8 flex items-center gap-3">
+                        <i class="fas fa-briefcase"></i> Experience History
+                    </h3>
+                    <div class="space-y-8 border-l-2 border-slate-200 dark:border-slate-800 ml-3 pl-6 relative">
+                        <div class="relative">
+                            <div class="absolute -left-[31px] top-1.5 w-4 h-4 rounded-full bg-indigo-600 dark:bg-indigo-400 border-4 border-slate-50 dark:border-slate-950"></div>
+                            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl shadow-sm">
+                                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
+                                    <div>
+                                        <h4 class="text-xl font-bold text-slate-900 dark:text-white">Senior Coach - Leader Technology</h4>
+                                        <p class="text-indigo-600 dark:text-indigo-400 text-sm font-medium mt-0.5">Orbit Future Academy</p>
+                                    </div>
+                                    <span class="px-3 py-1 bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 text-xs font-semibold rounded-full border border-indigo-100 dark:border-indigo-900/50 w-max">2020 - 2025</span>
+                                </div>
+                                <p class="mt-4 text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-4">
+                                    Developed and customized specialized multi-tier learning modules. Coordinated engineering platforms and accelerated cross-functional cloud literacy programs efficiently.
+                                </p>
+                                <!-- Menampilkan tangkapan layar aktivitas mengajar AI / Deep Learning -->
+                                <div class="rounded-xl overflow-hidden border border-slate-100 dark:border-slate-800 max-w-md">
+                                    <!--img src="images\AI4Y.jpg" alt="Deep Learning AI Class Presentation" class="w-full h-auto object-cover"-->
+									<!--img src="images\Kampus Merdeka.jpg" alt="Deep Learning AI Class Presentation" class="w-full h-auto object-cover"-->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="relative">
+                            <div class="absolute -left-[31px] top-1.5 w-4 h-4 rounded-full bg-slate-400 dark:bg-slate-600 border-4 border-slate-50 dark:border-slate-950"></div>
+                            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl shadow-sm">
+                                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
+                                    <div>
+                                        <h4 class="text-xl font-bold text-slate-900 dark:text-white">Technical Network Support Engineer</h4>
+                                        <p class="text-slate-500 dark:text-slate-400 text-sm font-medium mt-0.5">Cahaya Arif Abadi</p>
+                                    </div>
+                                    <span class="px-3 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-xs font-semibold rounded-full w-max">2017 - 2019</span>
+                                </div>
+                                <p class="mt-4 text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-4">
+                                    Maintained mission-critical server environments, structural optimizations, automated software deployment pipelines, and integrated secure corporate networking frameworks.
+                                </p>
+                                <!-- Menampilkan gambar representasi infrastruktur / server administration -->
+                                <div class="rounded-xl overflow-hidden border border-slate-100 dark:border-slate-800 max-w-md">
+                                    <!--img src="images\image-4.jpg" alt="Server Administration and DevOps Infrastructure" class="w-full h-auto object-cover"-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Education & Certifications -->
+                <div class="grid md:grid-cols-2 gap-12 pt-4">
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white uppercase tracking-widest mb-6 flex items-center gap-3">
+                            <i class="fas fa-graduation-cap text-indigo-600"></i> Education & Mentorship
+                        </h3>
+                        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl shadow-sm space-y-4">
+                            <div>
+                                <span class="text-xs font-bold text-indigo-600 dark:text-indigo-400">2011 - 2017</span>
+                                <h4 class="text-lg font-bold text-slate-900 dark:text-white mt-1">Bachelor in Information Technology</h4>
+                                <p class="text-slate-500 text-sm">Budi Luhur University</p>
+                            </div>
+                            <!-- Menampilkan dokumentasi pengerjaan project praktis di Kampus Merdeka -->
+                            <div class="rounded-xl overflow-hidden border border-slate-100 dark:border-slate-800">
+                                <!--img src="images\Kampus Merdeka.jpg" alt="Kampus Merdeka Project Ecosystem" class="w-full h-auto object-cover"-->
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white uppercase tracking-widest mb-6 flex items-center gap-3">
+                            <i class="fas fa-certificate text-violet-600"></i> Expert Competencies
+                        </h3>
+                        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl shadow-sm space-y-4">
+                            <div class="space-y-3 text-sm text-slate-600 dark:text-slate-400">
+                                <div class="flex items-center gap-2"><i class="fas fa-check-circle text-emerald-500"></i> AWS Cloud Architecting Graduate</div>
+                                <div class="flex items-center gap-2"><i class="fas fa-check-circle text-emerald-500"></i> Linux Server & Administration</div>
+                                <div class="flex items-center gap-2"><i class="fas fa-check-circle text-emerald-500"></i> Database Systems (MySQL)</div>
+                                <div class="flex items-center gap-2"><i class="fas fa-check-circle text-emerald-500"></i> TCP/IP Networking & Cloud Security</div>
+                            </div>
+                            <!-- Menampilkan logo identitas Mus Legion -->
+                            <div class="flex justify-center pt-2">
+                                <!--img src="images\Mus Legion.jpg" alt="Mus Legion Brand Icon" class="w-24 h-24 object-contain rounded-xl border border-slate-100 dark:border-slate-800 p-1 bg-slate-50 dark:bg-slate-950"-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PORTFOLIO SHOWCASE BLOCK -->
+    <section id="portfolio" class="py-24 bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-slate-900">
+        <div class="container mx-auto px-6">
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Ecosystem Projects</h2>
+                <p class="text-slate-500 dark:text-slate-400 mt-2 text-sm">Interactive tools designed for performance, built natively with modern web infrastructure</p>
+                <div class="h-1 w-12 bg-indigo-600 dark:bg-indigo-400 mx-auto mt-4 rounded-full"></div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Project 1: TTS -->
+                <div class="bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800/80 rounded-2xl overflow-hidden group hover:shadow-xl hover:border-indigo-300 dark:hover:border-indigo-900 transition-all duration-300 flex flex-col h-full">
+                    <div class="p-8 flex-grow flex flex-col justify-between">
+                        <div>
+                            <div class="w-12 h-12 rounded-xl bg-purple-100 dark:bg-purple-950/50 text-purple-600 dark:text-purple-400 flex items-center justify-center text-xl mb-6">
+                                <i class="fas fa-volume-up"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+								<a href="./text-to-speech/text to speech.html" class="hover:underline flex items-center gap-2">
+									Text-to-Speech (TTS) AI <i class="fas fa-external-link-alt text-xs opacity-50"></i>
+								</a>
+							</h3>
+                            <p class="mt-3 text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
+                                A high-performance interactive application transforming dynamic scripts into crisp natural voice syntheses with intuitive global accent modifiers.
+                            </p>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-slate-200 dark:border-slate-800">
+                            <span class="text-xs font-semibold px-2.5 py-1 bg-purple-50 dark:bg-purple-950/30 text-purple-600 dark:text-purple-400 rounded-md">Tailwind CSS</span>
+                            <span class="text-xs font-semibold px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-md ml-1">Speech API</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 2: KPR -->
+                <div class="bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800/80 rounded-2xl overflow-hidden group hover:shadow-xl hover:border-indigo-300 dark:hover:border-indigo-900 transition-all duration-300 flex flex-col h-full">
+                    <div class="p-8 flex-grow flex flex-col justify-between">
+                        <div>
+                            <div class="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 flex items-center justify-center text-xl mb-6">
+                                <i class="fas fa-calculator"></i>
+                            </div>
+							<h3 class="text-xl font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+								<a href="./prediksi kpr/index.html" class="hover:underline flex items-center gap-2">
+									Mortgage Engine Calculator <i class="fas fa-external-link-alt text-xs opacity-50"></i>
+								</a>
+							</h3>
+                            <p class="mt-3 text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
+                                Financial estimation suite for corporate assets featuring precision amortization calculations, custom down-payment evaluations, and automated report generation.
+                            </p>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-slate-200 dark:border-slate-800">
+                            <span class="text-xs font-semibold px-2.5 py-1 bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400 rounded-md">Vanilla JS</span>
+                            <span class="text-xs font-semibold px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-md ml-1">KPR Output</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 3: Sentiment Analysis -->
+                <div class="bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800/80 rounded-2xl overflow-hidden group hover:shadow-xl hover:border-indigo-300 dark:hover:border-indigo-900 transition-all duration-300 flex flex-col h-full">
+                    <div class="p-8 flex-grow flex flex-col justify-between">
+                        <div>
+                            <div class="w-12 h-12 rounded-xl bg-emerald-100 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-xl mb-6">
+                                <i class="fas fa-quote-right"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+								<a href="./sentiment_analisis/index.html" class="hover:underline flex items-center gap-2">
+									Sentiment Analysis <i class="fas fa-external-link-alt text-xs opacity-50"></i>
+								</a>
+							</h3>
+                            <p class="mt-3 text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
+                                Public sentiment tracking suite for current events featuring real-time news simulation, historical data cross-referencing, and automated mitigation analysis.
+                            </p>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-slate-200 dark:border-slate-800">
+                            <span class="text-xs font-semibold px-2.5 py-1 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 rounded-md">Text Analytics</span>
+                            <span class="text-xs font-semibold px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-md ml-1">Transformers</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BLOG INSIGHTS SECTION -->
+    <section id="blog" class="py-24 bg-slate-50 dark:bg-slate-900/40 border-b border-slate-200 dark:border-slate-900">
+        <div class="container mx-auto px-6">
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Blog Insights</h2>
+                <div class="h-1 w-12 bg-indigo-600 dark:bg-indigo-400 mx-auto mt-4 rounded-full"></div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <!-- Blog 1: Perjalanan Hati -->
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 rounded-2xl overflow-hidden shadow-sm flex flex-col h-full">
+                    <div class="h-48 overflow-hidden border-b border-slate-100 dark:border-slate-800">
+                        <img src="images\blog-1.jpg" alt="Perjalanan Hati Thumbnail" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
+                    </div>
+                    <div class="p-6 flex-grow flex flex-col justify-between">
+                        <div>
+                            <span class="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase">Mindfulness</span>
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-2">Perjalanan Hati</h3>
+                            <p class="mt-3 text-slate-600 dark:text-slate-400 text-sm leading-relaxed line-clamp-3">
+                                Highlighting the importance of deep, intentional decision-making frameworks. Contrasting human programmatic emotional choices with static robotic behaviors to foster connections.
+                            </p>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800">
+                            <a href="https://theblackspotz.blogspot.com/2024/11/perjalanan-hati.html" target="_blank" class="text-indigo-600 dark:text-indigo-400 text-sm font-semibold inline-flex items-center gap-2 hover:underline">
+                                Read Article <i class="fas fa-arrow-right text-xs"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Blog 2: Cyberpreneur -->
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 rounded-2xl overflow-hidden shadow-sm flex flex-col h-full">
+                    <div class="h-48 overflow-hidden border-b border-slate-100 dark:border-slate-800">
+                        <img src="images\blog-2.jpg" alt="Cyberpreneur Thumbnail" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
+                    </div>
+                    <div class="p-6 flex-grow flex flex-col justify-between">
+                        <div>
+                            <span class="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase">Digital Business</span>
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-2">Cyberpreneur</h3>
+                            <p class="mt-3 text-slate-600 dark:text-slate-400 text-sm leading-relaxed line-clamp-3">
+                                Analyzing digital ecosystems for entrepreneurial leverage. Exploring internet strategies for technical automation, scalable community building, and digital asset distribution.
+                            </p>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800">
+                            <a href="https://theblackspotz.blogspot.com/2024/11/cyberpreneur.html" target="_blank" class="text-indigo-600 dark:text-indigo-400 text-sm font-semibold inline-flex items-center gap-2 hover:underline">
+                                Read Article <i class="fas fa-arrow-right text-xs"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Blog 3: Cyberpreneurship Steps -->
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 rounded-2xl overflow-hidden shadow-sm flex flex-col h-full">
+                    <div class="h-48 overflow-hidden border-b border-slate-100 dark:border-slate-800">
+                        <img src="images\blog-3.jpg" alt="Cyberpreneurship Steps Thumbnail" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
+                    </div>
+                    <div class="p-6 flex-grow flex flex-col justify-between">
+                        <div>
+                            <span class="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase">Execution</span>
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-2">Cyberpreneurship Steps</h3>
+                            <p class="mt-3 text-slate-600 dark:text-slate-400 text-sm leading-relaxed line-clamp-3">
+                                A clean breakdown to online equity. Choosing high-yield niches, setting up authoritative knowledge platforms, building audience trust frameworks, and engineering custom services.
+                            </p>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800">
+                            <a href="https://theblackspotz.blogspot.com/2011/12/cyberpreneurship.html" target="_blank" class="text-indigo-600 dark:text-indigo-400 text-sm font-semibold inline-flex items-center gap-2 hover:underline">
+                                Read Article <i class="fas fa-arrow-right text-xs"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section id="contact" class="py-24 bg-white dark:bg-slate-950">
+        <div class="container mx-auto px-6 max-w-4xl">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Contact Matrix</h2>
+                <div class="h-1 w-12 bg-indigo-600 dark:bg-indigo-400 mx-auto mt-4 rounded-full"></div>
+            </div>
+            
+            <div class="grid md:grid-cols-12 gap-8 items-stretch">
+                <div class="md:col-span-5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 rounded-3xl flex flex-col justify-between space-y-6">
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-900 dark:text-white">Let's collaborate</h3>
+                        <p class="text-slate-500 dark:text-slate-400 text-sm mt-2 leading-relaxed">
+                            Open for educational program coaching, AI pipeline optimization consultation, or infrastructure lecturing architectures.
+                        </p>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-4 text-slate-600 dark:text-slate-300">
+                            <div class="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-slate-800 flex items-center justify-center text-indigo-600 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-900/30">
+                                <i class="fas fa-envelope text-sm"></i>
+                            </div>
+                            <span class="text-sm font-semibold">hafidzmurtono@gmail.com</span>
+                        </div>
+                        <div class="flex items-center gap-4 text-slate-600 dark:text-slate-300">
+                            <div class="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-slate-800 flex items-center justify-center text-indigo-600 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-900/30">
+                                <i class="fas fa-map-marker-alt text-sm"></i>
+                            </div>
+                            <span class="text-sm font-semibold">Depok, West Java, Indonesia</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="md:col-span-7 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 rounded-3xl">
+                    <form class="space-y-4" onsubmit="event.preventDefault();">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Name</label>
+                                <input type="text" class="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-3 text-sm focus:outline-indigo-500 text-slate-900 dark:text-white">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Email Address</label>
+                                <input type="email" class="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-3 text-sm focus:outline-indigo-500 text-slate-900 dark:text-white">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Message</label>
+                            <textarea rows="4" class="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-3 text-sm focus:outline-indigo-500 text-slate-900 dark:text-white"></textarea>
+                        </div>
+                        <button class="w-full bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 text-white font-semibold py-3 rounded-xl transition-all shadow-md shadow-indigo-600/10">
+                            Transmit Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CORE CHANNELS FOOTER -->
+    <footer class="bg-slate-900 text-slate-400 border-t border-slate-950 py-12 text-sm">
+        <div class="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+            <p>&copy; 2026 hafid77 Portfolio Ecosystem. All rights reserved.</p>
+            <div class="flex space-x-6 text-xl">
+                <a href="https://www.linkedin.com/in/abdul-hafidz-murtono" target="_blank" class="hover:text-white transition-colors"><i class="fab fa-linkedin"></i></a>
+                <a href="https://www.github.com/hafid2130" target="_blank" class="hover:text-white transition-colors"><i class="fab fa-github"></i></a>
+                <a href="https://x.com/huffveedz77" target="_blank" class="hover:text-white transition-colors"><i class="fab fa-twitter"></i></a>
+                <a href="https://www.tiktok.com/@hafid77277" target="_blank" class="hover:text-white transition-colors"><i class="fab fa-tiktok"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- INTERACTIVE DARK MODE SCRIPT -->
+    <script>
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeToggleIcon = document.getElementById('theme-toggle-icon');
+        const mobileThemeToggleBtn = document.getElementById('mobile-theme-toggle');
+        const mobileThemeToggleIcon = document.getElementById('mobile-theme-toggle-icon');
+
+        function toggleTheme() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('color-theme', 'light');
+                themeToggleIcon.className = 'fas fa-moon';
+                mobileThemeToggleIcon.className = 'fas fa-moon';
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('color-theme', 'dark');
+                themeToggleIcon.className = 'fas fa-sun';
+                mobileThemeToggleIcon.className = 'fas fa-sun';
+            }
+        }
+
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(pre-preferred-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+            themeToggleIcon.className = 'fas fa-sun';
+            mobileThemeToggleIcon.className = 'fas fa-sun';
+        } else {
+            document.documentElement.classList.remove('dark');
+            themeToggleIcon.className = 'fas fa-moon';
+            mobileThemeToggleIcon.className = 'fas fa-moon';
+        }
+
+        themeToggleBtn.addEventListener('click', toggleTheme);
+        mobileThemeToggleBtn.addEventListener('click', toggleTheme);
+    </script>
+</body>
+</html>

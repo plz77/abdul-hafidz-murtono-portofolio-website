@@ -1,2 +1,2 @@
-# abdul-hafidz-murtono-portofolio-website
-My website to showcase my portofolio
+# my_new_portofolio-web
+just a simple web that showcase my project
