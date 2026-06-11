@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="id" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Sentiment Analysis Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-100 via-blue-50 to-slate-200 dark:from-slate-900 dark:via-blue-950 dark:to-slate-900 min-h-screen flex items-center justify-center p-4 transition-colors duration-300">
+
+    <div class="absolute top-4 right-4 flex items-center gap-3">
+        <button id="lang-toggle" class="bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition">
+            <i class="fas fa-globe"></i> <span id="lang-label">EN</span>
+        </button>
+        <button id="theme-toggle" class="bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 p-2 rounded-xl text-xs shadow-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition">
+            <i id="theme-icon" class="fas fa-moon"></i>
+        </button>
+    </div>
+
+    <div class="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-blue-900/40 backdrop-blur-md rounded-2xl shadow-xl dark:shadow-2xl p-6 md:p-8 max-w-xl w-full text-center transition-colors duration-300">
+        <div class="mb-6">
+            <div class="w-12 h-12 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center text-2xl mx-auto mb-4 border border-blue-500/20">
+                <i class="fas fa-brain"></i>
+            </div>
+            <h1 id="main-title" class="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">Analisis Sentimen AI</h1>
+            <p id="main-desc" class="text-slate-500 dark:text-slate-400 text-sm mt-1">Analisis sentimen teks Bahasa Indonesia langsung di browser menggunakan Transformers.js</p>
+        </div>
+
+        <div id="status-container" class="mb-6 p-4 bg-amber-500/10 border border-amber-500/20 rounded-xl text-amber-600 dark:text-amber-400 text-sm flex flex-col sm:flex-row items-center justify-center gap-3">
+            <div class="flex items-center gap-2">
+                <i class="fas fa-spinner fa-spin" id="status-icon"></i>
+                <span id="status-text">Mengunduh model NLP Bahasa Indonesia (mohon tunggu)...</span>
+            </div>
+            <button id="retry-btn" class="hidden bg-amber-600 hover:bg-amber-500 text-white text-xs font-semibold px-3 py-1 rounded-md transition shadow-sm">
+                <i class="fas fa-redo"></i> Retry
+            </button>
+        </div>
+
+        <div class="space-y-4 text-left">
+            <label id="input-label" class="block text-sm font-semibold text-slate-700 dark:text-slate-300">Masukkan Kalimat / Ulasan:</label>
+            <textarea id="text-input" disabled rows="4" 
+                class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl p-4 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 placeholder:text-slate-400"
+                placeholder="Contoh: Aplikasi ini sangat membantu pengerjaan tugas saya menjadi lebih cepat!"></textarea>
+            
+            <button id="analyze-btn" disabled
+                class="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 px-6 rounded-xl shadow-md transition duration-300 transform hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
+                <i class="fas fa-chart-bar"></i> <span id="btn-text">Analisis Sentimen</span>
+            </button>
+        </div>
+
+        <div id="result-container" class="mt-8 pt-6 border-t border-slate-200 dark:border-slate-800/60 hidden text-left space-y-4">
+            <h3 id="result-title" class="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Hasil Analisis Model:</h3>
+            
+            <div class="flex items-center justify-between p-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
+                <span id="label-tag" class="text-slate-500 dark:text-slate-400 text-sm">Label Sentimen:</span>
+                <span id="sentiment-badge" class="px-3 py-1 rounded-md text-xs font-bold tracking-wide uppercase">POSITIF</span>
+            </div>
+
+            <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-2">
+                <div class="flex justify-between text-sm">
+                    <span id="confidence-tag" class="text-slate-500 dark:text-slate-400">Tingkat Keyakinan (Confidence Score):</span>
+                    <span id="score-text" class="text-slate-900 dark:text-white font-mono font-bold">0%</span>
+                </div>
+                <div class="w-full bg-slate-200 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+                    <div id="score-bar" class="bg-blue-500 h-full w-0 transition-all duration-500"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { pipeline } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.6.0';
+
+        // DOM Elements
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        const langToggle = document.getElementById('lang-toggle');
+        const langLabel = document.getElementById('lang-label');
+        
+        const mainTitle = document.getElementById('main-title');
+        const mainDesc = document.getElementById('main-desc');
+        const inputLabel = document.getElementById('input-label');
+        const textInput = document.getElementById('text-input');
+        const analyzeBtn = document.getElementById('analyze-btn');
+        const btnText = document.getElementById('btn-text');
+        
+        const statusContainer = document.getElementById('status-container');
+        const statusIcon = document.getElementById('status-icon');
+        const statusText = document.getElementById('status-text');
+        const retryBtn = document.getElementById('retry-btn');
+        
+        const resultContainer = document.getElementById('result-container');
+        const resultTitle = document.getElementById('result-title');
+        const labelTag = document.getElementById('label-tag');
+        const confidenceTag = document.getElementById('confidence-tag');
+        const sentimentBadge = document.getElementById('sentiment-badge');
+        const scoreText = document.getElementById('score-text');
+        const scoreBar = document.getElementById('score-bar');
+
+        let classifier;
+        let currentLang = 'id';
+
+        // Kamus Bahasa
+        const i18n = {
+            id: {
+                title: "Analisis Sentimen AI",
+                desc: "Analisis sentimen teks Bahasa Indonesia langsung di browser menggunakan Transformers.js",
+                loading: "Mengunduh model NLP Bahasa Indonesia (mohon tunggu)...",
+                ready: "Model AI Bahasa Indonesia siap digunakan!",
+                error: "Gagal memuat model AI. Periksa koneksi internet atau Ad-blocker Anda.",
+                label: "Masukkan Kalimat / Ulasan:",
+                placeholder: "Contoh: Aplikasi ini sangat membantu pengerjaan tugas saya menjadi lebih cepat!",
+                btn: "Analisis Sentimen",
+                btnLoading: "Memproses Teks...",
+                resTitle: "Hasil Analisis Model:",
+                resLabel: "Label Sentimen:",
+                resConf: "Tingkat Keyakinan (Confidence Score):",
+                pos: "POSITIF",
+                neg: "NEGATIF"
+            },
+            en: {
+                title: "AI Sentiment Analysis",
+                desc: "Analyze Indonesian text sentiment directly in your browser using Transformers.js",
+                loading: "Downloading Indonesian NLP model (please wait)...",
+                ready: "Indonesian AI Model is ready for use!",
+                error: "Failed to load AI model. Please check your internet connection or Ad-blocker.",
+                label: "Enter Sentence / Review:",
+                placeholder: "Example: Aplikasi ini sangat membantu pengerjaan tugas saya menjadi lebih cepat!",
+                btn: "Analyze Sentiment",
+                btnLoading: "Processing Text...",
+                resTitle: "Model Analysis Result:",
+                resLabel: "Sentiment Label:",
+                resConf: "Confidence Score:",
+                pos: "POSITIVE",
+                neg: "NEGATIVE"
+            }
+        };
+
+        // 1. Tema (Light/Dark Mode)
+        themeToggle.addEventListener('click', () => {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                themeIcon.className = 'fas fa-moon';
+            } else {
+                document.documentElement.classList.add('dark');
+                themeIcon.className = 'fas fa-sun';
+            }
+        });
+
+        // 2. Alih Bahasa UI
+        langToggle.addEventListener('click', () => {
+            currentLang = currentLang === 'id' ? 'en' : 'id';
+            langLabel.textContent = currentLang === 'id' ? 'EN' : 'ID';
+            updateUIStrings();
+        });
+
+        function updateUIStrings() {
+            const t = i18n[currentLang];
+            mainTitle.textContent = t.title;
+            mainDesc.textContent = t.desc;
+            inputLabel.textContent = t.label;
+            textInput.placeholder = t.placeholder;
+            if (!analyzeBtn.disabled && !textInput.disabled) {
+                btnText.textContent = t.btn;
+            }
+            resultTitle.textContent = t.resTitle;
+            labelTag.textContent = t.resLabel;
+            confidenceTag.textContent = t.resConf;
+            
+            if (classifier) {
+                statusText.textContent = t.ready;
+            } else if (retryBtn.classList.contains('hidden')) {
+                statusText.textContent = t.loading;
+            } else {
+                statusText.textContent = t.error;
+            }
+        }
+
+        // 3. Inisialisasi Model AI
+        async function initAI() {
+            retryBtn.classList.add('hidden');
+            statusIcon.className = 'fas fa-spinner fa-spin';
+            statusContainer.className = "mb-6 p-4 bg-amber-500/10 border border-amber-500/20 rounded-xl text-amber-600 dark:text-amber-400 text-sm flex flex-col sm:flex-row items-center justify-center gap-3";
+            statusText.textContent = i18n[currentLang].loading;
+
+            try {
+                classifier = await pipeline('sentiment-analysis', 'Xenova/indonesian-sentiment-analysis');
+                
+                statusContainer.className = "mb-6 p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl text-blue-600 dark:text-blue-400 text-sm flex items-center justify-center gap-3";
+                statusIcon.className = 'fas fa-check-circle';
+                statusText.textContent = i18n[currentLang].ready;
+                
+                textInput.disabled = false;
+                analyzeBtn.disabled = false;
+                btnText.textContent = i18n[currentLang].btn;
+            } catch (error) {
+                statusIcon.className = 'fas fa-exclamation-triangle';
+                statusContainer.className = "mb-6 p-4 bg-rose-500/10 border border-rose-500/20 rounded-xl text-rose-600 dark:text-rose-400 text-sm flex flex-col sm:flex-row items-center justify-center gap-3";
+                statusText.textContent = i18n[currentLang].error;
+                retryBtn.classList.remove('hidden');
+                console.error(error);
+            }
+        }
+
+        retryBtn.addEventListener('click', initAI);
+        initAI();
+
+        // 4. Logika Pemrosesan Analisis Sentimen
+        analyzeBtn.addEventListener('click', async () => {
+            const text = textInput.value.trim();
+            if (!text) return;
+
+            analyzeBtn.disabled = true;
+            btnText.textContent = i18n[currentLang].btnLoading;
+
+            try {
+                const result = await classifier(text);
+                const prediction = result[0]; 
+
+                let label = prediction.label;
+                let displayLabel = "";
+                
+                if (label === 'LABEL_1' || label === 'POSITIVE') {
+                    displayLabel = i18n[currentLang].pos;
+                    sentimentBadge.className = 'px-3 py-1 rounded-md text-xs font-bold tracking-wide uppercase bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20';
+                    scoreBar.className = 'bg-blue-600 dark:bg-blue-500 h-full transition-all duration-500';
+                } else {
+                    displayLabel = i18n[currentLang].neg;
+                    sentimentBadge.className = 'px-3 py-1 rounded-md text-xs font-bold tracking-wide uppercase bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20';
+                    scoreBar.className = 'bg-rose-600 dark:bg-rose-500 h-full transition-all duration-500';
+                }
+
+                const scorePercentage = (prediction.score * 100).toFixed(1);
+                resultContainer.classList.remove('hidden');
+
+                sentimentBadge.textContent = displayLabel;
+                scoreText.textContent = `${scorePercentage}%`;
+                scoreBar.style.width = `${scorePercentage}%`;
+
+            } catch (error) {
+                alert('Error processing sentiment analysis.');
+                console.error(error);
+            } finally {
+                analyzeBtn.disabled = false;
+                btnText.textContent = i18n[currentLang].btn;
+            }
+        });
+    </script>
+</body>
+</html>
