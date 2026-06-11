@@ -92,8 +92,14 @@
 
 
     <script type="module">
-    // Menggunakan fetch API bawaan browser untuk berkomunikasi langsung dengan Google AI Cloud
-    const GEMINI_API_KEY = "";
+    // GANTI KODE FETCH LAMA ANDA DENGAN JALUR NETLIFY INI:
+    const response = await fetch(`/.netlify/functions/analyze-sentiment`, {
+        method: "POST",
+        headers: { 
+            "Content-Type": "application/json" 
+        },
+        body: JSON.stringify({ text: text }) // Mengirim teks ke serverless Netlify
+    });
 
     // DOM Elements Sesuai dengan Struktur ID HTML Asli Anda
     const themeToggle = document.getElementById('theme-toggle');
