@@ -94,9 +94,9 @@
     
     // PENGATURAN UTAMA JALUR INTERNET HUGGING FACE (Mencegah Error 404/Blocker Lokal)
     env.allowLocalModels = false;
-    env.remoteUrls = {
-        'Xenova/indonesian-sentiment-analysis': 'https://huggingface.co/Xenova/indonesian-sentiment-analysis/resolve/main/'
-    };
+    //env.remoteUrls = {
+        //'Xenova/indonesian-sentiment-analysis': 'https://huggingface.co/Xenova/indonesian-sentiment-analysis/resolve/main/'
+    //};
 
     // DOM Elements
     const themeToggle = document.getElementById('theme-toggle');
@@ -211,8 +211,16 @@
         statusText.textContent = i18n[currentLang].loading;
 
         try {
-            // Memanggil pipeline dengan konfigurasi CDN eksternal
-            classifier = await pipeline('sentiment-analysis', 'Xenova/indonesian-sentiment-analysis');
+            // Memaksa pengunduhan langsung dari Hugging Face Hub CDN lewat parameter ketiga
+            classifier = await pipeline('sentiment-analysis', 'Xenova/indonesian-sentiment-analysis', {
+                revision: 'main',
+                quantized: true,
+                progress_callback: (progress) => {
+                    if (progress.status === 'progress') {
+                        statusText.textContent = `${i18n[currentLang].loading} (${progress.loaded}% )`;
+                    }
+                }
+            });
             
             statusContainer.className = "mb-6 p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl text-blue-600 dark:text-blue-400 text-sm flex items-center justify-center gap-3";
             statusIcon.className = 'fas fa-check-circle';
@@ -226,7 +234,7 @@
             statusContainer.className = "mb-6 p-4 bg-rose-500/10 border border-rose-500/20 rounded-xl text-rose-600 dark:text-rose-400 text-sm flex flex-col sm:flex-row items-center justify-center gap-3";
             statusText.textContent = i18n[currentLang].error;
             retryBtn.classList.remove('hidden');
-            console.error(error);
+            console.error("Detail Kendala Koneksi:", error);
         }
     }
 
