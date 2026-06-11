@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Prediksi KPR</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea, #764ba2); /* Gradasi warna latar belakang */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Pastikan mengambil tinggi viewport penuh */
+            padding: 20px;
+        }
+        .card {
+            background-color: #ffffff;
+            border-radius: 1rem; /* Sudut lebih bulat */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2); /* Bayangan lebih kuat */
+            padding: 2.5rem; /* Padding lebih besar */
+            max-width: 500px;
+            width: 100%;
+            animation: fadeIn 1s ease-out; /* Animasi fade-in saat memuat */
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .input-field {
+            @apply shadow-sm appearance-none border border-gray-300 rounded-lg w-full py-2.5 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out;
+        }
+        .btn-primary {
+            @apply bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition duration-200 ease-in-out transform hover:scale-105;
+        }
+        .error-box {
+            @apply mt-6 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">Prediksi Cicilan KPR</h1>
+        <p class="text-gray-600 mb-8 text-center">Masukkan detail aset untuk menghitung estimasi cicilan bulanan Anda.</p>
+
+        <form id="kprForm" action="kpr_output.html" method="GET">
+            <div class="space-y-4">
+                <div>
+                    <label for="hargaAset" class="block text-gray-700 text-sm font-semibold mb-2">Harga Aset (Rp):</label>
+                    <input type="number" id="hargaAset" name="hargaAset" class="input-field" placeholder="Contoh: 750000000" required>
+                </div>
+
+                <div>
+                    <label for="uangMuka" class="block text-gray-700 text-sm font-semibold mb-2">Uang Muka (Rp):</label>
+                    <input type="number" id="uangMuka" name="uangMuka" class="input-field" placeholder="Contoh: 150000000" required>
+                </div>
+
+                <div>
+                    <label for="sukuBunga" class="block text-gray-700 text-sm font-semibold mb-2">Suku Bunga Tahunan (%):</label>
+                    <input type="number" step="0.01" id="sukuBunga" name="sukuBunga" class="input-field" placeholder="Contoh: 6.75" required>
+                </div>
+
+                <div>
+                    <label for="tenor" class="block text-gray-700 text-sm font-semibold mb-2">Tenor (Tahun):</label>
+                    <input type="number" id="tenor" name="tenor" class="input-field" placeholder="Contoh: 20" required>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-primary mt-8 w-full py-3 px-6 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 transition duration-300 transform hover:scale-105">
+                Hitung Estimasi Cicilan
+            </button>
+
+            <div id="errorContainer" class="error-box hidden">
+                <p id="errorMessage" class="text-sm"></p>
+            </div>
+        </form>
+
+        <a href="index.html" class="block mt-8 text-center text-blue-600 hover:underline">Kembali ke Beranda</a>
+    </div>
+
+    <script>
+        const kprForm = document.getElementById('kprForm');
+        const hargaAsetInput = document.getElementById('hargaAset');
+        const uangMukaInput = document.getElementById('uangMuka');
+        const sukuBungaInput = document.getElementById('sukuBunga');
+        const tenorInput = document.getElementById('tenor');
+        const errorContainer = document.getElementById('errorContainer');
+        const errorMessage = document.getElementById('errorMessage');
+
+        kprForm.addEventListener('submit', (event) => {
+            const hargaAset = parseFloat(hargaAsetInput.value);
+            const uangMuka = parseFloat(uangMukaInput.value);
+            const sukuBungaTahunan = parseFloat(sukuBungaInput.value);
+            const tenorTahun = parseFloat(tenorInput.value);
+
+            // Sembunyikan pesan error sebelumnya
+            errorContainer.classList.add('hidden');
+
+            // Validasi input
+            if (isNaN(hargaAset) || isNaN(uangMuka) || isNaN(sukuBungaTahunan) || isNaN(tenorTahun) ||
+                hargaAset <= 0 || uangMuka < 0 || sukuBungaTahunan < 0 || tenorTahun <= 0) {
+                errorMessage.textContent = 'Harap masukkan semua nilai dengan benar (angka positif).';
+                errorContainer.classList.remove('hidden');
+                event.preventDefault(); // Mencegah form disubmit
+                return;
+            }
+
+            if (uangMuka >= hargaAset) {
+                errorMessage.textContent = 'Uang muka tidak boleh lebih besar atau sama dengan harga aset.';
+                errorContainer.classList.remove('hidden');
+                event.preventDefault(); // Mencegah form disubmit
+                return;
+            }
+        });
+    </script>
+</body>
+</html>

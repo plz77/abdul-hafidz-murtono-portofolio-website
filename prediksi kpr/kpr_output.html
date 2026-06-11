@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hasil Prediksi KPR</title>
+    <!-- Tailwind CSS CDN untuk styling yang cepat dan responsif -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Font Inter untuk tampilan modern -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea, #764ba2); /* Gradasi warna latar belakang */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Pastikan mengambil tinggi viewport penuh */
+            padding: 20px;
+        }
+        .card {
+            background-color: #ffffff;
+            border-radius: 1rem; /* Sudut lebih bulat */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2); /* Bayangan lebih kuat */
+            padding: 2.5rem; /* Padding lebih besar */
+            max-width: 600px;
+            width: 100%;
+            animation: fadeIn 1s ease-out; /* Animasi fade-in saat memuat */
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .result-detail {
+            @apply flex justify-between items-center py-2 border-b border-gray-200;
+        }
+        .result-detail:last-child {
+            @apply border-b-0;
+        }
+        /* Styling untuk kotak hasil utama */
+        .result-output-box {
+            @apply mt-6 p-5 bg-blue-50 border border-blue-200 text-blue-800 rounded-lg text-center;
+        }
+        /* Styling untuk textbox catatan tambahan */
+        .output-notes-box {
+            @apply mt-6 p-4 border border-gray-300 rounded-lg bg-gray-50 text-gray-700;
+            min-height: 80px; /* Memberi tinggi minimum agar terlihat seperti textbox */
+            white-space: pre-wrap; /* Memastikan line break dipertahankan */
+        }
+        /* Styling khusus untuk elemen di dalam tombol aksi terpadu */
+        .unified-action-button-content {
+            background: transparent; /* Pastikan background-nya transparan */
+            border: none; /* Hilangkan border */
+            color: inherit; /* Warisi warna teks dari parent (putih) */
+            font-weight: inherit; /* Warisi font-weight dari parent */
+            padding: 0.5rem 1rem; /* Padding internal untuk setiap item (disesuaikan agar pas dengan py-3 px-6 container) */
+            border-radius: 0.5rem; /* Sudut membulat */
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+            cursor: pointer;
+            text-decoration: none; /* Hilangkan garis bawah default untuk a */
+            display: flex; /* Untuk menengahkan teks */
+            align-items: center;
+            justify-content: center;
+        }
+        .unified-action-button-content:hover {
+            background-color: rgba(255, 255, 255, 0.2); /* Efek hover overlay transparan */
+            transform: scale(1.02); /* Efek scale kecil saat hover */
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">Hasil Prediksi KPR</h1>
+        <p class="text-gray-600 mb-8 text-center">Detail estimasi cicilan KPR bulanan Anda.</p>
+
+        <div class="space-y-4">
+            <div class="result-detail">
+                <span class="text-gray-600">Harga Aset:</span>
+                <span id="outputHargaAset" class="font-bold text-gray-800"></span>
+            </div>
+            <div class="result-detail">
+                <span class="text-gray-600">Uang Muka:</span>
+                <span id="outputUangMuka" class="font-bold text-gray-800"></span>
+            </div>
+            <div class="result-detail">
+                <span class="text-gray-600">Pokok Pinjaman:</span>
+                <span id="outputPokokPinjaman" class="font-bold text-gray-800"></span>
+            </div>
+            <div class="result-detail">
+                <span class="text-gray-600">Suku Bunga Tahunan:</span>
+                <span id="outputSukuBunga" class="font-bold text-gray-800"></span>
+            </div>
+            <div class="result-detail">
+                <span class="text-gray-600">Tenor:</span>
+                <span id="outputTenor" class="font-bold text-gray-800"></span>
+            </div>
+        </div>
+
+        <!-- Kotak hasil utama dengan desain seperti result-box -->
+        <div id="cicilanResultBox" class="result-output-box">
+            <h3 class="text-xl font-bold text-gray-800 mb-2">Estimasi Cicilan Bulanan:</h3>
+            <p id="outputCicilan" class="text-blue-800 text-4xl font-extrabold"></p>
+        </div>
+
+        <!-- Textbox untuk menampilkan catatan tambahan -->
+        <div id="outputCatatanTambahanContainer" class="output-notes-box hidden">
+            <h3 class="text-md font-semibold text-gray-700 mb-2">Catatan Tambahan:</h3>
+            <p id="outputCatatanTambahan" class="text-gray-600 text-sm"></p>
+        </div>
+
+        <!-- Tombol dan link terpadu dalam satu div background hijau -->
+        <div class="flex justify-center items-center space-x-4 mt-8 py-3 px-6 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 transition duration-300 transform hover:scale-105 w-full">
+	<!--div class="flex justify-center items-center space-x-4 mt-8 py-3 px-6 bg-white-600 text-black font-semibold rounded-lg shadow-md hover:bg-yellow-700 transition duration-300 transform hover:scale-105 w-full"-->
+            <button id="downloadButton" class="unified-action-button-content">Unduh Hasil</button>
+            <a href="kpr_calculator.html" class="unified-action-button-content">Kembali ke Kalkulator</a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+
+            const hargaAset = parseFloat(params.get('hargaAset'));
+            const uangMuka = parseFloat(params.get('uangMuka'));
+            const sukuBungaTahunan = parseFloat(params.get('sukuBunga'));
+            const tenorTahun = parseFloat(params.get('tenor'));
+            const catatanTambahan = params.get('catatanTambahan') || ''; // Ambil catatan tambahan
+
+            // Tampilkan kembali data input
+            document.getElementById('outputHargaAset').textContent = `Rp ${hargaAset.toLocaleString('id-ID')}`;
+            document.getElementById('outputUangMuka').textContent = `Rp ${uangMuka.toLocaleString('id-ID')}`;
+            document.getElementById('outputSukuBunga').textContent = `${sukuBungaTahunan.toLocaleString('id-ID', {minimumFractionDigits: 2, maximumFractionDigits: 2})}%`;
+            document.getElementById('outputTenor').textContent = `${tenorTahun} Tahun`;
+
+            // Tampilkan catatan tambahan jika ada
+            const outputCatatanTambahan = document.getElementById('outputCatatanTambahan');
+            const outputCatatanTambahanContainer = document.getElementById('outputCatatanTambahanContainer');
+            if (catatanTambahan) {
+                outputCatatanTambahan.textContent = catatanTambahan;
+                outputCatatanTambahanContainer.classList.remove('hidden');
+            } else {
+                outputCatatanTambahanContainer.classList.add('hidden'); // Sembunyikan jika kosong
+            }
+
+            // Lakukan perhitungan yang sama seperti di halaman kalkulator
+            const pokokPinjaman = hargaAset - uangMuka;
+            const sukuBungaBulanan = (sukuBungaTahunan / 100) / 12;
+            const tenorBulan = tenorTahun * 12;
+
+            let cicilanBulanan;
+            if (sukuBungaBulanan === 0) {
+                cicilanBulanan = pokokPinjaman / tenorBulan;
+            } else {
+                cicilanBulanan = pokokPinjaman * (sukuBungaBulanan * Math.pow(1 + sukuBungaBulanan, tenorBulan)) / (Math.pow(1 + sukuBungaBulanan, tenorBulan) - 1);
+            }
+            
+            // Tampilkan hasil perhitungan dan pokok pinjaman
+            document.getElementById('outputPokokPinjaman').textContent = `Rp ${pokokPinjaman.toLocaleString('id-ID', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            document.getElementById('outputCicilan').textContent = `Rp ${cicilanBulanan.toLocaleString('id-ID', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+
+            // Fungsi untuk mengunduh hasil
+            document.getElementById('downloadButton').addEventListener('click', () => {
+                const content = `
+Prediksi Cicilan KPR:
+--------------------
+Harga Aset               : Rp ${hargaAset.toLocaleString('id-ID')}
+Uang Muka                : Rp ${uangMuka.toLocaleString('id-ID')}
+Pokok Pinjaman           : Rp ${pokokPinjaman.toLocaleString('id-ID', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+Suku Bunga Tahunan       : ${sukuBungaTahunan.toLocaleString('id-ID', {minimumFractionDigits: 2, maximumFractionDigits: 2})}%
+Tenor                    : ${tenorTahun} Tahun
+Catatan Tambahan         : ${catatanTambahan || '-'}
+--------------------
+Estimasi Cicilan Bulanan : Rp ${cicilanBulanan.toLocaleString('id-ID', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                `;
+                const filename = 'Hasil_Prediksi_KPR.txt';
+                const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            });
+        });
+    </script>
+</body>
+</html>
