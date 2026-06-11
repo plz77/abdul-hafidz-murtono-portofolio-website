@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text-to-Speech (TTS) AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #a78bfa, #8b5cf6); /* Gradasi warna ungu-biru */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .card {
+            background-color: #ffffff;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            padding: 2.5rem;
+            max-width: 640px;
+            width: 100%;
+            animation: fadeIn 1s ease-out;
+            box-sizing: border-box;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Gaya umum untuk input/select field */
+        .input-field {
+            @apply shadow-sm appearance-none border border-gray-300 rounded-lg w-full py-2.5 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200 ease-in-out;
+        }
+
+        /* Gaya SPESIFIK untuk textarea dengan ID textInput */
+        #textInput {
+            border-width: 2px;
+            border-color: #000000;
+            display: block;
+            width: 100%;
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        /* Styling untuk disabled button - tetap di sini karena ini adalah kondisi */
+        button:disabled { /* Target semua button saat disabled */
+            @apply bg-gray-400 cursor-not-allowed;
+        }
+
+        .error-box {
+            @apply mt-6 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg;
+        }
+        .loading-indicator {
+            @apply mt-4 text-center text-purple-600 font-semibold;
+        }
+        /* Flex container untuk buttons agar bisa sejajar */
+        .button-group {
+            display: flex;
+            justify-content: center; /* Pusatkan tombol */
+            gap: 1rem; /* Spasi antar tombol */
+            flex-wrap: wrap; /* Izinkan wrap ke baris baru di layar kecil */
+            margin-top: 1.5rem; /* Spasi dari elemen di atasnya */
+        }
+        /* Penyesuaian lebar untuk elemen di dalam card. */
+        .card > div, .card > a {
+            width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        /* Pastikan judul dan paragraf di tengah tetap center */
+        .card h1, .card p.text-center {
+            width: 100%;
+            text-align: center;
+            max-width: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">Text-to-Speech (TTS) AI</h1>
+        <p class="text-gray-600 mb-8 text-center">Ubah teks menjadi suara dengan pilihan bahasa.</p>
+
+        <div class="mb-4">
+            <label for="textInput" class="block text-gray-700 text-sm font-semibold mb-2">Teks yang Ingin Diucapkan (maks 2000 karakter):</label>
+            <textarea id="textInput" class="input-field" rows="6" maxlength="2000" placeholder="Ketik teks di sini..."></textarea>
+            <p id="charCount" class="text-xs text-gray-500 text-right mt-1">0/2000 karakter</p>
+        </div>
+
+        <div class="mb-6">
+            <label for="voiceSelect" class="block text-gray-700 text-sm font-semibold mb-2">Pilih Bahasa/Suara:</label>
+            <select id="voiceSelect" class="input-field">
+                <option value="Kore" data-lang="en-US">English (Kore - Firm)</option>
+                <option value="Zephyr" data-lang="en-US">English (Zephyr - Bright)</option>
+                <option value="Puck" data-lang="en-US">English (Puck - Upbeat)</option>
+                <option value="Charon" data-lang="en-US">English (Charon - Informative)</option>
+                <option value="Fenrir" data-lang="en-US">English (Fenrir - Excitable)</option>
+                <option value="Leda" data-lang="en-US">English (Leda - Youthful)</option>
+                <option value="Orus" data-lang="en-US">English (Orus - Firm)</option>
+                <option value="Aoede" data-lang="en-US">English (Aoede - Breezy)</option>
+                <option value="Callirrhoe" data-lang="en-US">English (Callirrhoe - Easy-going)</option>
+                <option value="Autonoe" data-lang="en-US">English (Autonoe - Bright)</option>
+                <option value="Enceladus" data-lang="en-US">English (Enceladus - Breathy)</option>
+                <option value="Iapetus" data-lang="en-US">English (Iapetus - Clear)</option>
+                <option value="Umbriel" data-lang="en-US">English (Umbriel - Easy-going)</option>
+                <option value="Algieba" data-lang="en-US">English (Algieba - Smooth)</option>
+                <option value="Despina" data-lang="en-US">English (Despina - Smooth)</option>
+                <option value="Erinome" data-lang="en-US">English (Erinome - Clear)</option>
+                <option value="Algenib" data-lang="en-US">English (Algenib - Gravelly)</option>
+                <option value="Rasalgethi" data-lang="en-US">English (Rasalgethi - Informative)</option>
+                <option value="Laomedeia" data-lang="en-US">English (Upbeat)</option>
+                <option value="Achernar" data-lang="en-US">English (Achernar - Soft)</option>
+                <option value="Alnilam" data-lang="en-US">English (Alnilam - Firm)</option>
+                <option value="Schedar" data-lang="en-US">English (Schedar - Even)</option>
+                <option value="Gacrux" data-lang="en-US">English (Gacrux - Mature)</option>
+                <option value="Pulcherrima" data-lang="en-US">English (Pulcherrima - Forward)</option>
+                <option value="Achird" data-lang="en-US">English (Achird - Friendly)</option>
+                <option value="Zubenelgenubi" data-lang="en-US">English (Zubenelgenubi - Casual)</option>
+                <option value="Vindemiatrix" data-lang="en-US">English (Vindemiatrix - Gentle)</option>
+                <option value="Sadachbia" data-lang="en-US">English (Sadachbia - Lively)</option>
+                <option value="Sadaltager" data-lang="en-US">English (Sadaltager - Knowledgeable)</option>
+                <option value="Sulafat" data-lang="en-US">English (Sulafat - Warm)</option>
+                <option value="Kore" data-lang="id-ID">Indonesia (Kore - Firm)</option>
+                <option value="Puck" data-lang="id-ID">Indonesia (Puck - Upbeat)</option>
+                <option value="Charon" data-lang="id-ID">Indonesia (Charon - Informatif)</option>
+                <option value="Kore" data-lang="ja-JP">日本語 (Kore - Firm)</option>
+                <option value="Puck" data-lang="ko-KR">한국어 (Puck - Upbeat)</option>
+                <option value="Kore" data-lang="de-DE">Deutsch (Kore - Firm)</option>
+                <option value="Puck" data-lang="fr-FR">Français (Puck - Upbeat)</option>
+                <option value="Charon" data-lang="es-US">Español (Charon - Informatif)</option>
+                <option value="Kore" data-lang="zh-CN">中文 (Kore - Firm)</option>
+                <option value="Puck" data-lang="hi-IN">हिन्दी (Puck - Upbeat)</option>
+            </select>
+        </div>
+
+        <div class="button-group">
+            <button id="playButton" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-6 rounded-xl border-2 border-black focus:outline-none focus:ring-2 focus:ring-opacity-50 transition duration-200 ease-in-out transform hover:scale-105 inline-block text-center">
+                Dengarkan Teks
+            </button>
+            <button id="newTextButton" class="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-3 px-6 rounded-xl border border-gray-500 focus:outline-none focus:ring-2 focus:ring-opacity-50 transition duration-200 ease-in-out transform hover:scale-105 inline-block text-center">
+                Teks Baru
+            </button>
+        </div>
+
+        <div id="loadingIndicator" class="loading-indicator hidden">
+            Membuat suara...
+        </div>
+
+        <div id="errorContainer" class="error-box hidden">
+            <p id="errorMessage"></p>
+        </div>
+
+        <!--a href="./index.html" class="block mt-8 text-center text-blue-600 hover:underline">Kembali ke Beranda</a-->
+    </div>
+
+    <script>
+        const textInput = document.getElementById('textInput');
+        const charCount = document.getElementById('charCount');
+        const voiceSelect = document.getElementById('voiceSelect');
+        const playButton = document.getElementById('playButton');
+        const newTextButton = document.getElementById('newTextButton');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const errorContainer = document.getElementById('errorContainer');
+        const errorMessage = document.getElementById('errorMessage');
+
+        // Fungsi untuk mengupdate karakter count
+        textInput.addEventListener('input', () => {
+            charCount.textContent = `${textInput.value.length}/2000 karakter`;
+        });
+
+        // Event listener untuk tombol "Dengarkan Teks"
+        playButton.addEventListener('click', () => {
+            const text = textInput.value.trim();
+            if (!text) {
+                errorContainer.classList.remove('hidden');
+                errorMessage.textContent = 'Harap masukkan teks untuk diucapkan.';
+                return;
+            }
+
+            // Sembunyikan pesan error sebelumnya dan loading indicator
+            errorContainer.classList.add('hidden');
+            loadingIndicator.classList.add('hidden');
+
+            // Periksa apakah browser mendukung SpeechSynthesis API
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+
+                // Ambil bahasa dari dropdown
+                const selectedOption = voiceSelect.options[voiceSelect.selectedIndex];
+                const languageCode = selectedOption.dataset.lang;
+                utterance.lang = languageCode;
+
+                // Opsional: Coba temukan suara yang cocok dengan bahasa yang dipilih
+                const voices = window.speechSynthesis.getVoices();
+                const preferredVoice = voices.find(voice => voice.lang === languageCode);
+                if (preferredVoice) {
+                    utterance.voice = preferredVoice;
+                } else {
+                    console.warn(`Suara untuk bahasa ${languageCode} tidak ditemukan di browser, menggunakan suara default.`);
+                }
+
+                // Handler saat selesai berbicara atau terjadi error
+                utterance.onend = () => {
+                    console.log('Sintesis suara selesai.');
+                    playButton.disabled = false;
+                    newTextButton.disabled = false;
+                };
+                utterance.onerror = (event) => {
+                    console.error('Error saat sintesis suara:', event.error);
+                    errorContainer.classList.remove('hidden');
+                    errorMessage.textContent = `Gagal membuat suara: ${event.error}.`;
+                    playButton.disabled = false;
+                    newTextButton.disabled = false;
+                };
+
+                // Nonaktifkan tombol saat sedang berbicara
+                playButton.disabled = true;
+                newTextButton.disabled = true;
+
+                // Mulai berbicara
+                window.speechSynthesis.speak(utterance);
+
+            } else {
+                // Browser tidak mendukung API
+                errorContainer.classList.remove('hidden');
+                errorMessage.textContent = 'Browser Anda tidak mendukung Web Speech API.';
+            }
+        });
+
+        // Event listener untuk tombol "Teks Baru"
+        newTextButton.addEventListener('click', () => {
+            textInput.value = ''; // Kosongkan textarea
+            charCount.textContent = '0/2000 karakter'; // Reset karakter count
+            errorContainer.classList.add('hidden'); // Sembunyikan error
+            loadingIndicator.classList.add('hidden'); // Sembunyikan loading
+            // Jika ada suara yang sedang diputar, hentikan
+            if ('speechSynthesis' in window && window.speechSynthesis.speaking) {
+                window.speechSynthesis.cancel();
+            }
+            playButton.disabled = false; // Pastikan tombol play aktif
+            newTextButton.disabled = false; // Pastikan tombol new text aktif
+        });
+
+        // Opsional: Untuk melihat daftar suara yang tersedia di konsol browser Anda
+        window.speechSynthesis.onvoiceschanged = () => {
+            const voices = window.speechSynthesis.getVoices();
+            console.log("Suara yang Tersedia di Browser Anda:");
+            voices.forEach(voice => {
+                console.log(`Nama: ${voice.name}, Bahasa: ${voice.lang}, Default: ${voice.default}`);
+            });
+        };
+
+    </script>
+</body>
+</html>
