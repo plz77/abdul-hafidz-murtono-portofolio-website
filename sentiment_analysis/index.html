@@ -90,15 +90,19 @@
 
 
     <script type="module">
-    import { pipeline, env } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.6.0';
+    // 1. Menggunakan versi CDN yang paling stabil dan kompatibel dengan GitHub Pages
+    import { pipeline, env } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.14.0';
     
-    // PENGATURAN UTAMA JALUR INTERNET HUGGING FACE (Mencegah Error 404/Blocker Lokal)
+    // 2. BYPASS KEAMANAN: Matikan model lokal & matikan Web Worker agar tidak diblokir browser
     env.allowLocalModels = false;
-    //env.remoteUrls = {
-        //'Xenova/indonesian-sentiment-analysis': 'https://huggingface.co/Xenova/indonesian-sentiment-analysis/resolve/main/'
-    //};
+    env.useBrowserCache = true; 
+    
+    // Konfigurasi agar Transformers.js tidak membuat thread worker terpisah yang memicu CORS error
+    if (env.backends && env.backends.onnx) {
+        env.backends.onnx.wasm.numThreads = 1;
+    }
 
-    // DOM Elements
+    // DOM Elements - Menyesuaikan dengan ID HTML asli Anda (menggunakan tanda hubung)
     const themeToggle = document.getElementById('theme-toggle');
     const themeIcon = document.getElementById('theme-icon');
     const langToggle = document.getElementById('lang-toggle');
@@ -107,186 +111,134 @@
     const mainTitle = document.getElementById('main-title');
     const mainDesc = document.getElementById('main-desc');
     const inputLabel = document.getElementById('input-label');
-    const textInput = document.getElementById('text-input');
-    const analyzeBtn = document.getElementById('analyze-btn');
-    const btnText = document.getElementById('btn-text');
+    const textInput = document.getElementById('text-input') || document.getElementById('textInput');
+    const analyzeBtn = document.getElementById('analyze-btn') || document.getElementById('analyzeBtn');
+    const btnText = document.getElementById('btn-text') || document.getElementById('btnText');
     
-    const statusContainer = document.getElementById('status-container');
-    const statusIcon = document.getElementById('status-icon');
-    const statusText = document.getElementById('status-text');
-    const retryBtn = document.getElementById('retry-btn');
+    const statusContainer = document.getElementById('status-container') || document.getElementById('statusContainer');
+    const statusIcon = document.getElementById('status-icon') || document.getElementById('statusIcon');
+    const statusText = document.getElementById('status-text') || document.getElementById('statusText');
+    const retryBtn = document.getElementById('retry-btn') || document.getElementById('retryBtn');
     
-    const resultContainer = document.getElementById('result-container');
-    const resultTitle = document.getElementById('result-title');
-    const labelTag = document.getElementById('label-tag');
-    const confidenceTag = document.getElementById('confidence-tag');
-    const sentimentBadge = document.getElementById('sentiment-badge');
-    const scoreText = document.getElementById('score-text');
-    const scoreBar = document.getElementById('score-bar');
+    const resultContainer = document.getElementById('result-container') || document.getElementById('resultContainer');
+    const sentimentBadge = document.getElementById('sentiment-badge') || document.getElementById('sentimentBadge');
+    const scoreText = document.getElementById('score-text') || document.getElementById('scoreText');
+    const scoreBar = document.getElementById('score-bar') || document.getElementById('scoreBar');
 
-    let classifier;
+    let classifier = null;
     let currentLang = 'id';
 
-    // Kamus Bahasa
     const i18n = {
         id: {
-            title: "Analisis Sentimen AI",
-            desc: "Analisis sentimen teks Bahasa Indonesia langsung di browser menggunakan Transformers.js",
-            loading: "Mengunduh model NLP Bahasa Indonesia dari cloud (mohon tunggu)...",
+            loading: "Menghubungkan ke server NLP... (Mohon tunggu sekitar 30 detik)",
             ready: "Model AI Bahasa Indonesia siap digunakan!",
-            error: "Gagal memuat model AI. Periksa koneksi internet atau Ad-blocker Anda.",
-            label: "Masukkan Kalimat / Ulasan:",
-            placeholder: "Contoh: Aplikasi ini sangat membantu pengerjaan tugas saya menjadi lebih cepat!",
+            error: "Gagal memuat model AI. Terjadi kendala inisialisasi skrip browser.",
             btn: "Analisis Sentimen",
-            btnLoading: "Memproses Teks...",
-            resTitle: "Hasil Analisis Model:",
-            resLabel: "Label Sentimen:",
-            resConf: "Tingkat Keyakinan (Confidence Score):",
-            pos: "POSITIF",
-            neg: "NEGATIF"
+            btnLoading: "Memproses Teks..."
         },
         en: {
-            title: "AI Sentiment Analysis",
-            desc: "Analyze Indonesian text sentiment directly in your browser using Transformers.js",
-            loading: "Downloading Indonesian NLP model from cloud (please wait)...",
+            loading: "Connecting to NLP cloud... (Please wait around 30 seconds)",
             ready: "Indonesian AI Model is ready for use!",
-            error: "Failed to load AI model. Please check your internet connection or Ad-blocker.",
-            label: "Enter Sentence / Review:",
-            placeholder: "Example: Aplikasi ini sangat membantu pengerjaan tugas saya menjadi lebih cepat!",
+            error: "Failed to load AI model. Browser script initialization error.",
             btn: "Analyze Sentiment",
-            btnLoading: "Processing Text...",
-            resTitle: "Model Analysis Result:",
-            resLabel: "Sentiment Label:",
-            resConf: "Confidence Score:",
-            pos: "POSITIVE",
-            neg: "NEGATIVE"
+            btnLoading: "Processing Text..."
         }
     };
 
-    // 1. Tema (Light/Dark Mode)
-    themeToggle.addEventListener('click', () => {
-        if (document.documentElement.classList.contains('dark')) {
-            document.documentElement.classList.remove('dark');
-            themeIcon.className = 'fas fa-moon';
-        } else {
-            document.documentElement.classList.add('dark');
-            themeIcon.className = 'fas fa-sun';
-        }
-    });
-
-    // 2. Alih Bahasa UI
-    langToggle.addEventListener('click', () => {
-        currentLang = currentLang === 'id' ? 'en' : 'id';
-        langLabel.textContent = currentLang === 'id' ? 'EN' : 'ID';
-        updateUIStrings();
-    });
-
-    function updateUIStrings() {
-        const t = i18n[currentLang];
-        mainTitle.textContent = t.title;
-        mainDesc.textContent = t.desc;
-        inputLabel.textContent = t.label;
-        textInput.placeholder = t.placeholder;
-        if (!analyzeBtn.disabled && !textInput.disabled) {
-            btnText.textContent = t.btn;
-        }
-        resultTitle.textContent = t.resTitle;
-        labelTag.textContent = t.resLabel;
-        confidenceTag.textContent = t.resConf;
-        
-        if (classifier) {
-            statusText.textContent = t.ready;
-        } else if (retryBtn.classList.contains('hidden')) {
-            statusText.textContent = t.loading;
-        } else {
-            statusText.textContent = t.error;
-        }
-    }
-
-    // 3. Inisialisasi Model AI Terhubung Cloud Hugging Face
+    // 3. Fungsi Inisialisasi Model dengan Metode Pemanggilan Langsung (Direct Fetch)
     async function initAI() {
-        retryBtn.classList.add('hidden');
-        statusIcon.className = 'fas fa-spinner fa-spin';
-        statusContainer.className = "mb-6 p-4 bg-amber-500/10 border border-amber-500/20 rounded-xl text-amber-600 dark:text-amber-400 text-sm flex flex-col sm:flex-row items-center justify-center gap-3";
-        statusText.textContent = i18n[currentLang].loading;
+        if (retryBtn) retryBtn.classList.add('hidden');
+        if (statusIcon) statusIcon.className = 'fas fa-spinner fa-spin';
+        if (statusContainer) statusContainer.className = "mb-6 p-4 bg-amber-500/10 border border-amber-500/20 rounded-xl text-amber-600 dark:text-amber-400 text-sm flex flex-col sm:flex-row items-center justify-center gap-3";
+        if (statusText) statusText.textContent = i18n[currentLang].loading;
 
         try {
-            // Mengubah endpoint default CDN Transformers ke Unpkg jika HuggingFace diblokir provider internet
-            env.remoteHost = 'https://unpkg.com/@xenova/transformers@2.14.0/models/';
+            // Memanggil pipeline dengan mematikan worker secara eksplisit di parameter ketiga
+            classifier = await pipeline('sentiment-analysis', 'Xenova/indonesian-sentiment-analysis', {
+                env: env,
+                pool: false,
+                worker: false // -> MEMATIKAN WEB WORKER AGAR TIDAK DI-BLOCK GITHUB PAGES
+            });
             
-            // Menggunakan model alternatif bert-base yang telah dioptimasi eksternal
-            classifier = await pipeline('sentiment-analysis', 'Xenova/bert-base-multilingual-uncased');
+            if (statusContainer) statusContainer.className = "mb-6 p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl text-blue-600 dark:text-blue-400 text-sm flex items-center justify-center gap-3";
+            if (statusIcon) statusIcon.className = 'fas fa-check-circle';
+            if (statusText) statusText.textContent = i18n[currentLang].ready;
             
-            statusContainer.className = "mb-6 p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl text-blue-600 dark:text-blue-400 text-sm flex items-center justify-center gap-3";
-            statusIcon.className = 'fas fa-check-circle';
-            statusText.textContent = i18n[currentLang].ready;
+            if (textInput) textInput.disabled = false;
+            if (analyzeBtn) analyzeBtn.disabled = false;
+            if (btnText) btnText.textContent = i18n[currentLang].btn;
             
-            textInput.disabled = false;
-            analyzeBtn.disabled = false;
-            btnText.textContent = i18n[currentLang].btn;
+            console.log("Sistem AI Berhasil Aktif!");
         } catch (error) {
-            // JIKA MASIH GAGAL, KITA GUNAKAN BACKUP KEDUA: MODEL PALING RINGAN (DistilBERT)
-            try {
-                console.log("Mencoba jalur backup dengan model ringkas...");
-                classifier = await pipeline('sentiment-analysis', 'Xenova/distilbert-base-uncased-finetuned-sst-2-english');
-                
-                statusContainer.className = "mb-6 p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl text-blue-600 dark:text-blue-400 text-sm flex items-center justify-center gap-3";
-                statusIcon.className = 'fas fa-check-circle';
-                statusText.textContent = i18n[currentLang].ready;
-                
-                textInput.disabled = false;
-                analyzeBtn.disabled = false;
-                btnText.textContent = i18n[currentLang].btn;
-            } catch (backupError) {
-                statusIcon.className = 'fas fa-exclamation-triangle';
-                statusContainer.className = "mb-6 p-4 bg-rose-500/10 border border-rose-500/20 rounded-xl text-rose-600 dark:text-rose-400 text-sm flex flex-col sm:flex-row items-center justify-center gap-3";
-                statusText.textContent = i18n[currentLang].error;
-                retryBtn.classList.remove('hidden');
-                console.error("Gagal total memuat model via CDN:", backupError);
-            }
+            if (statusIcon) statusIcon.className = 'fas fa-exclamation-triangle';
+            if (statusContainer) statusContainer.className = "mb-6 p-4 bg-rose-500/10 border border-rose-500/20 rounded-xl text-rose-600 dark:text-rose-400 text-sm flex flex-col sm:flex-row items-center justify-center gap-3";
+            if (statusText) statusText.textContent = i18n[currentLang].error;
+            if (retryBtn) retryBtn.classList.remove('hidden');
+            console.error("Detail Log Error:", error);
         }
     }
 
-    // 4. Logika Pemrosesan Analisis Sentimen
-    analyzeBtn.addEventListener('click', async () => {
-        const text = textInput.value.trim();
-        if (!text) return;
+    if (retryBtn) retryBtn.addEventListener('click', initAI);
+    
+    // Jalankan sistem secara aman setelah seluruh elemen DOM selesai dirender
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initAI);
+    } else {
+        initAI();
+    }
 
-        analyzeBtn.disabled = true;
-        btnText.textContent = i18n[currentLang].btnLoading;
+    // 4. Logika Pemrosesan Tombol Analisis Sentimen
+    if (analyzeBtn) {
+        analyzeBtn.addEventListener('click', async () => {
+            if (!classifier || !textInput) return;
+            const text = textInput.value.trim();
+            if (!text) return;
 
-        try {
-            const result = await classifier(text);
-            const prediction = result[0]; 
+            analyzeBtn.disabled = true;
+            if (btnText) btnText.textContent = i18n[currentLang].btnLoading;
 
-            let label = prediction.label;
-            let displayLabel = "";
-            
-            if (label === 'LABEL_1' || label === 'POSITIVE') {
-                displayLabel = i18n[currentLang].pos;
-                sentimentBadge.className = 'px-3 py-1 rounded-md text-xs font-bold tracking-wide uppercase bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20';
-                scoreBar.className = 'bg-blue-600 dark:bg-blue-500 h-full transition-all duration-500';
-            } else {
-                displayLabel = i18n[currentLang].neg;
-                sentimentBadge.className = 'px-3 py-1 rounded-md text-xs font-bold tracking-wide uppercase bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20';
-                scoreBar.className = 'bg-rose-600 dark:bg-rose-500 h-full transition-all duration-500';
+            try {
+                const result = await classifier(text);
+                const prediction = result[0]; 
+
+                let label = prediction.label;
+                let displayLabel = (label === 'LABEL_1' || label === 'POSITIVE') ? "POSITIF" : "NEGATIF";
+                
+                if (sentimentBadge) {
+                    sentimentBadge.textContent = displayLabel;
+                    if (displayLabel === "POSITIF") {
+                        sentimentBadge.className = 'px-3 py-1 rounded-md text-xs font-bold tracking-wide uppercase bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20';
+                        if (scoreBar) scoreBar.className = 'bg-blue-600 dark:bg-blue-500 h-full transition-all duration-500';
+                    } else {
+                        sentimentBadge.className = 'px-3 py-1 rounded-md text-xs font-bold tracking-wide uppercase bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20';
+                        if (scoreBar) scoreBar.className = 'bg-rose-600 dark:bg-rose-500 h-full transition-all duration-500';
+                    }
+                }
+
+                const scorePercentage = (prediction.score * 100).toFixed(1);
+                if (resultContainer) resultContainer.classList.remove('hidden');
+                if (scoreText) scoreText.textContent = `${scorePercentage}%`;
+                if (scoreBar) scoreBar.style.width = `${scorePercentage}%`;
+
+            } catch (error) {
+                alert('Gagal memproses teks.');
+                console.error(error);
+            } finally {
+                analyzeBtn.disabled = false;
+                if (btnText) btnText.textContent = i18n[currentLang].btn;
             }
+        });
+    }
 
-            const scorePercentage = (prediction.score * 100).toFixed(1);
-            resultContainer.classList.remove('hidden');
-
-            sentimentBadge.textContent = displayLabel;
-            scoreText.textContent = `${scorePercentage}%`;
-            scoreBar.style.width = `${scorePercentage}%`;
-
-        } catch (error) {
-            alert('Error processing sentiment analysis.');
-            console.error(error);
-        } finally {
-            analyzeBtn.disabled = false;
-            btnText.textContent = i18n[currentLang].btn;
-        }
-    });
+    // Tema & Bahasa Toggle Terbuka Otomatis
+    if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            if (themeIcon) {
+                themeIcon.className = document.documentElement.classList.contains('dark') ? 'fas fa-sun' : 'fas fa-moon';
+            }
+        });
+    }
 </script>
 </body>
 </html>
