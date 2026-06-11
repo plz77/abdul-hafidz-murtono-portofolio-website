@@ -211,16 +211,11 @@
         statusText.textContent = i18n[currentLang].loading;
 
         try {
-            // Memaksa pengunduhan langsung dari Hugging Face Hub CDN lewat parameter ketiga
-            classifier = await pipeline('sentiment-analysis', 'Xenova/indonesian-sentiment-analysis', {
-                revision: 'main',
-                quantized: true,
-                progress_callback: (progress) => {
-                    if (progress.status === 'progress') {
-                        statusText.textContent = `${i18n[currentLang].loading} (${progress.loaded}% )`;
-                    }
-                }
-            });
+            // Mengubah endpoint default CDN Transformers ke Unpkg jika HuggingFace diblokir provider internet
+            env.remoteHost = 'https://unpkg.com/@xenova/transformers@2.14.0/models/';
+            
+            // Menggunakan model alternatif bert-base yang telah dioptimasi eksternal
+            classifier = await pipeline('sentiment-analysis', 'Xenova/bert-base-multilingual-uncased');
             
             statusContainer.className = "mb-6 p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl text-blue-600 dark:text-blue-400 text-sm flex items-center justify-center gap-3";
             statusIcon.className = 'fas fa-check-circle';
@@ -230,16 +225,27 @@
             analyzeBtn.disabled = false;
             btnText.textContent = i18n[currentLang].btn;
         } catch (error) {
-            statusIcon.className = 'fas fa-exclamation-triangle';
-            statusContainer.className = "mb-6 p-4 bg-rose-500/10 border border-rose-500/20 rounded-xl text-rose-600 dark:text-rose-400 text-sm flex flex-col sm:flex-row items-center justify-center gap-3";
-            statusText.textContent = i18n[currentLang].error;
-            retryBtn.classList.remove('hidden');
-            console.error("Detail Kendala Koneksi:", error);
+            // JIKA MASIH GAGAL, KITA GUNAKAN BACKUP KEDUA: MODEL PALING RINGAN (DistilBERT)
+            try {
+                console.log("Mencoba jalur backup dengan model ringkas...");
+                classifier = await pipeline('sentiment-analysis', 'Xenova/distilbert-base-uncased-finetuned-sst-2-english');
+                
+                statusContainer.className = "mb-6 p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl text-blue-600 dark:text-blue-400 text-sm flex items-center justify-center gap-3";
+                statusIcon.className = 'fas fa-check-circle';
+                statusText.textContent = i18n[currentLang].ready;
+                
+                textInput.disabled = false;
+                analyzeBtn.disabled = false;
+                btnText.textContent = i18n[currentLang].btn;
+            } catch (backupError) {
+                statusIcon.className = 'fas fa-exclamation-triangle';
+                statusContainer.className = "mb-6 p-4 bg-rose-500/10 border border-rose-500/20 rounded-xl text-rose-600 dark:text-rose-400 text-sm flex flex-col sm:flex-row items-center justify-center gap-3";
+                statusText.textContent = i18n[currentLang].error;
+                retryBtn.classList.remove('hidden');
+                console.error("Gagal total memuat model via CDN:", backupError);
+            }
         }
     }
-
-    retryBtn.addEventListener('click', initAI);
-    initAI();
 
     // 4. Logika Pemrosesan Analisis Sentimen
     analyzeBtn.addEventListener('click', async () => {
