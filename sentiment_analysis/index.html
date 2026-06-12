@@ -143,22 +143,20 @@
         }
     };
 
-    // Inisialisasi awal - Langsung aktif tanpa beban unduhan biner
+// Inisialisasi awal - Langsung aktif menggunakan Netlify Functions
     function initAI() {
         if (retryBtn) retryBtn.classList.add('hidden');
         
-        if (!GEMINI_API_KEY || GEMINI_API_KEY.startsWith("PASTE")) {
-            if (statusIcon) statusIcon.className = 'fas fa-exclamation-triangle';
-            if (statusContainer) statusContainer.className = "mb-6 p-4 bg-rose-500/10 border border-rose-500/20 rounded-xl text-rose-600 dark:text-rose-400 text-sm flex items-center justify-center gap-3";
-            if (statusText) statusText.textContent = i18n[currentLang].error;
-            return;
+        // Langsung tampilkan indikator sukses terhubung ke cloud Netlify
+        if (statusContainer) {
+            statusContainer.className = "mb-6 p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-emerald-600 dark:text-emerald-400 text-sm flex items-center justify-center gap-3";
         }
-
-        // Tampilkan indikator sukses terhubung ke cloud
-        if (statusContainer) statusContainer.className = "mb-6 p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl text-blue-600 dark:text-blue-400 text-sm flex items-center justify-center gap-3";
         if (statusIcon) statusIcon.className = 'fas fa-check-circle';
-        if (statusText) statusText.textContent = i18n[currentLang].ready;
         
+        // Menampilkan teks "Sistem NLP Cloud Siap" atau dinamis sesuai bahasa
+        if (statusText) statusText.textContent = "Sistem NLP Cloud (Netlify + Gemini API) Siap.";
+        
+        // Mengaktifkan semua tombol input agar siap dipakai
         if (textInput) textInput.disabled = false;
         if (analyzeBtn) analyzeBtn.disabled = false;
         if (btnText) btnText.textContent = i18n[currentLang].btn;
