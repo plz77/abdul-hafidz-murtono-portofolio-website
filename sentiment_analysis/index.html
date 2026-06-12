@@ -90,7 +90,7 @@
     </div>
 
     <script type="module">
-        // DOM Elements Sesuai dengan Struktur ID HTML Asli Anda
+        // DOM Elements
         const themeToggle = document.getElementById('theme-toggle');
         const themeIcon = document.getElementById('theme-icon');
         const langToggle = document.getElementById('lang-toggle');
@@ -130,27 +130,22 @@
             }
         };
 
-        // Inisialisasi awal - Langsung aktif menggunakan Netlify Functions
+        // Inisialisasi status hijau sukses
         function initAI() {
             if (retryBtn) retryBtn.classList.add('hidden');
             
-            // Langsung tampilkan indikator sukses terhubung ke cloud Netlify
             if (statusContainer) {
                 statusContainer.className = "mb-6 p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-emerald-600 dark:text-emerald-400 text-sm flex items-center justify-center gap-3";
             }
             if (statusIcon) statusIcon.className = 'fas fa-check-circle';
-            
-            // Menampilkan teks status siap sesuai bahasa
             if (statusText) statusText.textContent = i18n[currentLang].ready;
             
-            // Mengaktifkan semua tombol input agar siap dipakai
             if (textInput) textInput.disabled = false;
-            //if (analyzeBtn) disabled = false; // Membuka kunci tombol
             if (analyzeBtn) analyzeBtn.disabled = false;
             if (btnText) btnText.textContent = i18n[currentLang].btn;
         }
 
-        // Eksekusi Analisis Sentimen via Netlify Functions Backend
+        // Eksekusi Analisis via Backend Netlify Functions
         if (analyzeBtn) {
             analyzeBtn.addEventListener('click', async () => {
                 if (!textInput) return;
@@ -161,7 +156,7 @@
                 if (btnText) btnText.textContent = i18n[currentLang].btnLoading;
 
                 try {
-                    // JALUR AMAN NETLIFY FUNCTIONS (Mengirim teks ke backend kita)
+                    // MEMANGGIL BACKEND NETLIFY SECARA AMAN
                     const response = await fetch(`/.netlify/functions/analyze-sentiment`, {
                         method: "POST",
                         headers: { 
@@ -173,7 +168,6 @@
                     if (!response.ok) throw new Error("Serverless function error");
 
                     const prediction = await response.json();
-                    
                     const displayLabel = prediction.sentiment.toUpperCase(); 
                     const confidenceScore = prediction.confidence;
 
@@ -189,15 +183,15 @@
                         }
                     }
 
-                    // Kalkulasi persentase akurasi bar
+                    // Menghitung bar kemajuan skor
                     const scorePercentage = (confidenceScore * 100).toFixed(1);
                     if (resultContainer) resultContainer.classList.remove('hidden');
                     if (scoreText) scoreText.textContent = `${scorePercentage}%`;
                     if (scoreBar) scoreBar.style.width = `${scorePercentage}%`;
 
                 } catch (error) {
-                    alert('Gagal mendapatkan respons analisis dari Server Netlify. Pastikan Environment Variable GEMINI_API_KEY sudah disetel.');
-                    console.error("Detail Log Kendala API Netlify:", error);
+                    alert('Gagal mendapatkan respons analisa dari Server Netlify. Pastikan Environment Variable GEMINI_API_KEY sudah diset dengan benar.');
+                    console.error("Detail Log Kendala API:", error);
                 } finally {
                     analyzeBtn.disabled = false;
                     if (btnText) btnText.textContent = i18n[currentLang].btn;
@@ -205,7 +199,7 @@
             });
         }
 
-        // Toggle Kontrol Bahasa & Tema Utama
+        // Toggle Bahasa & Tema
         if (langToggle) {
             langToggle.addEventListener('click', () => {
                 currentLang = currentLang === 'id' ? 'en' : 'id';
@@ -223,7 +217,7 @@
             });
         }
 
-        // Jalankan inisialisasi aplikasi
+        // Jalankan Inisialisasi
         initAI();
     </script>
 </body>
