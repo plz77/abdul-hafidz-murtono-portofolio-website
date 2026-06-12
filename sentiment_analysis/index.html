@@ -130,22 +130,18 @@
             }
         };
 
-        // Inisialisasi status hijau sukses
         function initAI() {
             if (retryBtn) retryBtn.classList.add('hidden');
-            
             if (statusContainer) {
                 statusContainer.className = "mb-6 p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-emerald-600 dark:text-emerald-400 text-sm flex items-center justify-center gap-3";
             }
             if (statusIcon) statusIcon.className = 'fas fa-check-circle';
             if (statusText) statusText.textContent = i18n[currentLang].ready;
-            
             if (textInput) textInput.disabled = false;
             if (analyzeBtn) analyzeBtn.disabled = false;
             if (btnText) btnText.textContent = i18n[currentLang].btn;
         }
 
-        // Eksekusi Analisis via Backend Netlify Functions
         if (analyzeBtn) {
             analyzeBtn.addEventListener('click', async () => {
                 if (!textInput) return;
@@ -156,13 +152,11 @@
                 if (btnText) btnText.textContent = i18n[currentLang].btnLoading;
 
                 try {
-                    // MEMANGGIL BACKEND NETLIFY SECARA AMAN
+                    // MEMANGGIL ENDPOINT NETLIFY FUNCTIONS
                     const response = await fetch(`/.netlify/functions/analyze-sentiment`, {
                         method: "POST",
-                        headers: { 
-                            "Content-Type": "application/json" 
-                        },
-                        body: JSON.stringify({ text: text }) 
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ text: text })
                     });
 
                     if (!response.ok) throw new Error("Serverless function error");
@@ -171,7 +165,6 @@
                     const displayLabel = prediction.sentiment.toUpperCase(); 
                     const confidenceScore = prediction.confidence;
 
-                    // Tampilkan badge visual sentimen
                     if (sentimentBadge) {
                         sentimentBadge.textContent = displayLabel === "POSITIF" ? (currentLang === 'id' ? "POSITIF" : "POSITIVE") : (currentLang === 'id' ? "NEGATIF" : "NEGATIVE");
                         if (displayLabel === "POSITIF") {
@@ -183,14 +176,13 @@
                         }
                     }
 
-                    // Menghitung bar kemajuan skor
                     const scorePercentage = (confidenceScore * 100).toFixed(1);
                     if (resultContainer) resultContainer.classList.remove('hidden');
                     if (scoreText) scoreText.textContent = `${scorePercentage}%`;
                     if (scoreBar) scoreBar.style.width = `${scorePercentage}%`;
 
                 } catch (error) {
-                    alert('Gagal mendapatkan respons analisa dari Server Netlify. Pastikan Environment Variable GEMINI_API_KEY sudah diset dengan benar.');
+                    alert('Gagal mendapatkan respons analisa dari Server Netlify. Pastikan fungsi serverless dideploy dengan benar.');
                     console.error("Detail Log Kendala API:", error);
                 } finally {
                     analyzeBtn.disabled = false;
@@ -199,7 +191,6 @@
             });
         }
 
-        // Toggle Bahasa & Tema
         if (langToggle) {
             langToggle.addEventListener('click', () => {
                 currentLang = currentLang === 'id' ? 'en' : 'id';
@@ -217,7 +208,6 @@
             });
         }
 
-        // Jalankan Inisialisasi
         initAI();
     </script>
 </body>
