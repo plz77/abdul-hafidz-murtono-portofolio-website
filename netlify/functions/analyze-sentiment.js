@@ -1,10 +1,8 @@
-const { GoogleGenAI } = require("@google/genai");
-
+// Menggunakan dynamic import untuk menjamin kompatibilitas dengan SDK Google GenAI versi 'latest'
 exports.handler = async (event, context) => {
-  // Mengatasi pembatasan CORS jika diakses dari cross-domain
   const headers = {
     "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Headers": "Content-Type",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
     "Access-Control-Allow-Methods": "POST, OPTIONS",
   };
 
@@ -13,48 +11,35 @@ exports.handler = async (event, context) => {
   }
 
   if (event.httpMethod !== "POST") {
-    return {
-      statusCode: 405,
-      headers,
-      body: JSON.stringify({ error: "Metode tidak diizinkan" }),
-    };
+    return { statusCode: 405, headers, body: JSON.stringify({ error: "Method not allowed" }) };
   }
 
   try {
-    // 1. Cek ketersediaan API Key di Server Netlify
+    // Membaca nama variabel rahasia baru kita yang gratisan
     const apiKey = process.env.MY_GEMINI_KEY;
     if (!apiKey) {
-      console.error("EROR INTERNAL: GEMINI_API_KEY belum terkonfigurasi di Netlify.");
       return {
         statusCode: 500,
         headers,
-        body: JSON.stringify({ error: "API Key belum disetel di server." }),
+        body: JSON.stringify({ error: "Kunci MY_GEMINI_KEY tidak terbaca di server Netlify." }),
       };
     }
 
-    // 2. Parsing teks masukan dari frontend
     const { text } = JSON.parse(event.body || "{}");
     if (!text) {
-      return {
-        statusCode: 400,
-        headers,
-        body: JSON.stringify({ error: "Teks tidak boleh kosong." }),
-      };
+      return { statusCode: 400, headers, body: JSON.stringify({ error: "Teks kosong." }) };
     }
 
-    // 3. Inisialisasi Google Gen AI SDK
+    // Load modul Google GenAI secara dinamis agar aman dari eror compiler Netlify
+    const { GoogleGenAI } = await import("@google/genai");
     const ai = new GoogleGenAI({ apiKey: apiKey });
 
-    // 4. Memanggil Model Gemini untuk Analisis Sentimen
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash",
-      contents: `Analisislah sentimen dari kalimat Bahasa Indonesia berikut. Berikan hasil akhir HANYA dalam format JSON mentah seperti ini tanpa markdown tambahan atau format text lain: {"sentiment": "positif", "confidence": 0.95} atau {"sentiment": "negatif", "confidence": 0.88}. Kalimat yang dianalisis: "${text}"`,
+      contents: `Analisislah sentimen dari kalimat Bahasa Indonesia berikut. Berikan hasil akhir HANYA dalam format JSON mentah tanpa bungkusan markdown seperti ini: {"sentiment": "positif", "confidence": 0.95} atau {"sentiment": "negatif", "confidence": 0.88}. Kalimat: "${text}"`,
     });
 
     const responseText = response.text.trim();
-    console.log("Respons mentah dari Gemini:", responseText);
-
-    // Membersihkan bungkusan markdown ```json jika model tidak sengaja menyertakannya
     const cleanJson = responseText.replace(/```json|```/g, "").trim();
     const result = JSON.parse(cleanJson);
 
@@ -68,12 +53,11 @@ exports.handler = async (event, context) => {
     };
 
   } catch (error) {
-    console.error("Eror pada Netlify Function:", error);
     return {
       statusCode: 500,
       headers,
       body: JSON.stringify({ 
-        error: "Gagal memproses analisis sentimen.",
+        error: "Gagal memproses di server backend Netlify.",
         details: error.message 
       }),
     };
