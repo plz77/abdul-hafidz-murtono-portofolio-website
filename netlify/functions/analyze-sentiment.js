@@ -22,7 +22,7 @@ exports.handler = async (event, context) => {
 
   try {
     // 1. Cek ketersediaan API Key di Server Netlify
-    const apiKey = process.env.GEMINI_API_KEY;
+    const apiKey = process.env.MY_GEMINI_KEY;
     if (!apiKey) {
       console.error("EROR INTERNAL: GEMINI_API_KEY belum terkonfigurasi di Netlify.");
       return {
