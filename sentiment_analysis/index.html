@@ -152,12 +152,12 @@
                 if (btnText) btnText.textContent = i18n[currentLang].btnLoading;
 
                 try {
-                    // MEMANGGIL ENDPOINT NETLIFY FUNCTIONS
-                    const response = await fetch(`/.netlify/functions/analyze-sentiment`, {
+                    // MEMANGGIL ENDPOINT NETLIFY FUNCTIONS DENGAN URL MUTLAK
+                    const response = await fetch('https://abdul-hafidz-murtono-web-portofolio.netlify.app/.netlify/functions/analyze-sentiment', {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({ text: text })
-                    });
+                    });;
 
                     if (!response.ok) throw new Error("Serverless function error");
 
