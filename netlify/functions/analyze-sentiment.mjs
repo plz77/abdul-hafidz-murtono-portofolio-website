@@ -1,27 +1,32 @@
-// Menggunakan dynamic import untuk menjamin kompatibilitas dengan SDK Google GenAI versi 'latest'
-exports.handler = async (event, context) => {
+import { GoogleGenAI } from "@google/genai";
+
+export const handler = async (event, context) => {
   const headers = {
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Headers": "Content-Type, Authorization",
     "Access-Control-Allow-Methods": "POST, OPTIONS",
   };
 
+  // Handle CORS preflight
   if (event.httpMethod === "OPTIONS") {
     return { statusCode: 200, headers, body: "" };
   }
 
   if (event.httpMethod !== "POST") {
-    return { statusCode: 405, headers, body: JSON.stringify({ error: "Method not allowed" }) };
+    return { 
+      statusCode: 405, 
+      headers, 
+      body: JSON.stringify({ error: "Method not allowed" }) 
+    };
   }
 
   try {
-    // Membaca nama variabel rahasia baru kita yang gratisan
     const apiKey = process.env.MY_GEMINI_KEY;
     if (!apiKey) {
       return {
         statusCode: 500,
         headers,
-        body: JSON.stringify({ error: "Kunci MY_GEMINI_KEY tidak terbaca di server Netlify." }),
+        body: JSON.stringify({ error: "Kunci API tidak ditemukan di environment Netlify." }),
       };
     }
 
@@ -30,8 +35,7 @@ exports.handler = async (event, context) => {
       return { statusCode: 400, headers, body: JSON.stringify({ error: "Teks kosong." }) };
     }
 
-    // Load modul Google GenAI secara dinamis agar aman dari eror compiler Netlify
-    const { GoogleGenAI } = await import("@google/genai");
+    // Inisialisasi SDK Gemini secara direct dan bersih
     const ai = new GoogleGenAI({ apiKey: apiKey });
 
     const response = await ai.models.generateContent({
@@ -57,7 +61,7 @@ exports.handler = async (event, context) => {
       statusCode: 500,
       headers,
       body: JSON.stringify({ 
-        error: "Gagal memproses di server backend Netlify.",
+        error: "Gagal memproses analisis di backend serverless.",
         details: error.message 
       }),
     };
