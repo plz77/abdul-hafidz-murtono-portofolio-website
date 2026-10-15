@@ -247,7 +247,7 @@
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Project 1: CyberSec Sentinel (Updated Live Link) -->
+                <!-- Project 1: CyberSec Sentinel -->
                 <div class="bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800/80 rounded-2xl overflow-hidden group hover:shadow-xl hover:border-indigo-300 dark:hover:border-indigo-900 transition-all duration-300 flex flex-col h-full">
                     <div class="p-8 flex-grow flex flex-col justify-between">
                         <div>
@@ -278,25 +278,33 @@
                     </div>
                 </div>
 
-                <!-- Project 2: KPR -->
+                <!-- Project 2: NOC Network Supervision Matrix (Replaced Mortgage Engine) -->
                 <div class="bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800/80 rounded-2xl overflow-hidden group hover:shadow-xl hover:border-indigo-300 dark:hover:border-indigo-900 transition-all duration-300 flex flex-col h-full">
                     <div class="p-8 flex-grow flex flex-col justify-between">
                         <div>
                             <div class="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 flex items-center justify-center text-xl mb-6">
-                                <i class="fas fa-calculator"></i>
+                                <i class="fas fa-network-wired"></i>
                             </div>
                             <h3 class="text-xl font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
-                                <a href="./prediksi kpr/index.html" class="hover:underline flex items-center gap-2">
-                                    Mortgage Engine Calculator <i class="fas fa-external-link-alt text-xs opacity-50"></i>
+                                <a href="https://noc-supervision-system.vercel.app/" target="_blank" class="hover:underline flex items-center gap-2">
+                                    NOC Network Supervision Matrix <i class="fas fa-external-link-alt text-xs opacity-50"></i>
                                 </a>
                             </h3>
                             <p class="mt-3 text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
-                                Financial estimation suite for corporate assets featuring precision amortization calculations, custom down-payment evaluations, and automated report generation.
+                                Real-time enterprise network supervision dashboard featuring live WebSocket telemetry streaming, RTT latency monitoring, throughput analysis, and automated AI diagnostics.
                             </p>
                         </div>
-                        <div class="mt-6 pt-4 border-t border-slate-200 dark:border-slate-800 flex flex-wrap gap-2">
-                            <span class="text-xs font-semibold px-2.5 py-1 bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400 rounded-md">Vanilla JS</span>
-                            <span class="text-xs font-semibold px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-md">KPR Output</span>
+                        <div class="mt-6 pt-4 border-t border-slate-200 dark:border-slate-800 flex flex-col gap-3">
+                            <div class="flex flex-wrap gap-2">
+                                <span class="text-xs font-semibold px-2.5 py-1 bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400 rounded-md">React / Vite</span>
+                                <span class="text-xs font-semibold px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-md">WebSocket</span>
+                                <span class="text-xs font-semibold px-2.5 py-1 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 rounded-md">Tailwind CSS</span>
+                            </div>
+                            <div class="flex items-center gap-4 pt-1">
+                                <a href="https://noc-supervision-system.vercel.app/" target="_blank" class="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1">
+                                    <i class="fas fa-globe"></i> Launch Live Application <i class="fas fa-arrow-right text-[10px]"></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -393,67 +401,7 @@
     <footer class="bg-slate-900 text-slate-400 border-t border-slate-950 py-12 text-sm">
         <div class="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
             <p>&copy; 2026 hafid77 Portfolio Ecosystem. All rights reserved.</p>
-            <div class="flex space-x-6 text-xl">
-                <a href="https://www.linkedin.com/in/abdul-hafidz-murtono" target="_blank" class="hover:text-white transition-colors"><i class="fab fa-linkedin"></i></a>
-                <a href="https://www.github.com/plz77" target="_blank" class="hover:text-white transition-colors"><i class="fab fa-github"></i></a>
-                <a href="https://x.com/huffveedz77" target="_blank" class="hover:text-white transition-colors"><i class="fab fa-twitter"></i></a>
-                <a href="https://www.tiktok.com/@hafid77277" target="_blank" class="hover:text-white transition-colors"><i class="fab fa-tiktok"></i></a>
-            </div>
         </div>
     </footer>
-
-    <!-- INTERACTIVE DARK MODE SCRIPT -->
-    <script>
-        const themeToggleBtn = document.getElementById('theme-toggle');
-        const themeToggleIcon = document.getElementById('theme-toggle-icon');
-        const mobileThemeToggleBtn = document.getElementById('mobile-theme-toggle');
-        const mobileThemeToggleIcon = document.getElementById('mobile-theme-toggle-icon');
-
-        const userTheme = localStorage.getItem('theme');
-        const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-        const iconThemeUpdate = (isDark) => {
-            if (isDark) {
-                themeToggleIcon.classList.remove('fa-moon');
-                themeToggleIcon.classList.add('fa-sun');
-                if(mobileThemeToggleIcon) {
-                    mobileThemeToggleIcon.classList.remove('fa-moon');
-                    mobileThemeToggleIcon.classList.add('fa-sun');
-                }
-            } else {
-                themeToggleIcon.classList.remove('fa-sun');
-                themeToggleIcon.classList.add('fa-moon');
-                if(mobileThemeToggleIcon) {
-                    mobileThemeToggleIcon.classList.remove('fa-sun');
-                    mobileThemeToggleIcon.classList.add('fa-moon');
-                }
-            }
-        };
-
-        if (userTheme === 'dark' || (!userTheme && systemTheme)) {
-            document.documentElement.classList.add('dark');
-            iconThemeUpdate(true);
-        } else {
-            document.documentElement.classList.remove('dark');
-            iconThemeUpdate(false);
-        }
-
-        const themeToggleFunc = () => {
-            if (document.documentElement.classList.contains('dark')) {
-                document.documentElement.classList.remove('dark');
-                localStorage.setItem('theme', 'light');
-                iconThemeUpdate(false);
-            } else {
-                document.documentElement.classList.add('dark');
-                localStorage.setItem('theme', 'dark');
-                iconThemeUpdate(true);
-            }
-        };
-
-        themeToggleBtn.addEventListener('click', themeToggleFunc);
-        if(mobileThemeToggleBtn) {
-            mobileThemeToggleBtn.addEventListener('click', themeToggleFunc);
-        }
-    </script>
 </body>
 </html>
